@@ -1,0 +1,9 @@
+/dist.ini
+/MANIFEST.SKIP
+/Anki-Import-*
+/tmp
+!*/tmp
+*~
+*.swp
+*.swo
+weaver.ini
