@@ -1,14 +1,15 @@
 # NAME
 
-Anki::Import - this is what the module does
+Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # OVERVIEW
 
-Efficiently generate Anki notes with your text editor for easy import into Anki.
+Efficiently generate formatted Anki notes with your
+text editor for easy import into Anki.
 
 # SYNOPSIS
 
@@ -199,7 +200,34 @@ source data file.
                                          # unordered HTML list, with one item for
                                          # each term separated with commas
 
-# METHODS
+# USAGE
+
+`anki_import` can be run from the command line of rom within another perl
+script. It behaves the same way in both environments.
+
+## Command line usage
+
+`Anki::Import` provides a single command line command used to generate import
+files:
+
+    anki_import source_file [parent_dir] [verbosity_level]
+
+The command processes the source file and generates files to be imported into
+Anki with one file per note type. The files are placed in a directory called
+`anki_import`.  The directory is placed in the current working directory.
+
+Note: All previously generated files of a particular note type will be
+overwritten by this command without warning.
+
+**`parent_dir`** is an optional argument containing the path you want `Anki::Import`
+to save the files for output.
+
+<**`$verbosity`** can be set to either `--verbose` (`-v`) or `--vverbose` (`-vv`)
+for verbosity and maximum verbosity, respectively.
+
+## From a script
+
+Invoking the `anki_import` mirrors the arguments in the script.
 
 ## anki\_import($source\_file, \[$parent\_dir\], \[$verbosity\]);
 
