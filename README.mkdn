@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.005
+version 0.006
 
 # OVERVIEW
 
@@ -272,15 +272,6 @@ from your repository :)
 [https://github.com/sdondley/Anki-Import](https://github.com/sdondley/Anki-Import)
 
     git clone git://github.com/sdondley/Anki-Import.git
-
-# BUGS AND LIMITATIONS
-
-You can make new bug reports, and view existing ones, through the
-web interface at [http://github.com/sdondley/Anki-Import/issues](http://github.com/sdondley/Anki-Import/issues).
-
-# INSTALLATION
-
-See perlmodinstall for information and options on installing Perl modules.
 
 # SEE ALSO
 
