@@ -4,7 +4,7 @@ use Test::More;
 use Anki::Import;
 use Test::Exception;
 use Test::Warnings;
-use Data::Dumper qw(Dumper);
+
 
 
 

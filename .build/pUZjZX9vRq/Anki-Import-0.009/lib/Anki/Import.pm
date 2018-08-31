@@ -1,5 +1,5 @@
 package Anki::Import ;
-
+$Anki::Import::VERSION = '0.009';
 use strict;
 use warnings;
 use Cwd;
@@ -7,7 +7,6 @@ use Path::Tiny;
 use Getopt::Args;
 use Log::Log4perl::Shortcuts qw(:all);
 use Exporter qw(import);
-use Data::Dumper qw(Dumper);
 our @EXPORT = qw(anki_import);
 
 # set up variables
@@ -18,28 +17,30 @@ my $cline      = '';      # current line
 my $lline;                # last (previous) line
 my %notes      = ();      # data structure for storing notes
 
-# process arguments
-arg parent_dir => (
-  isa => 'Str',
-  default => cwd,
-  comment => 'optional directory to save output files, default to current directory',
-);
-opt verbose => (
-  isa => 'Bool',
-  alias => 'v',
-  comment => 'provide details on progress of Anki::Import'
-);
-opt vverbose => (
-  isa => 'Bool',
-  alias => 'vv',
-  comment => 'verbose information plus debug info'
-);
-
 # start here
 sub anki_import {
   my $file = shift;
   logf('No file passed to Anki::Import. Aborting.') if !$file;
 
+  # process arguments
+  arg parent_dir => (
+    isa => 'Str',
+    default => cwd,
+    comment => 'optional directory to save output files, default to current directory',
+  );
+  opt verbose => (
+    isa => 'Bool',
+    alias => 'v',
+    comment => 'provide details on progress of Anki::Import'
+  );
+  opt vverbose => (
+    isa => 'Bool',
+    alias => 'vv',
+    comment => 'verbose information plus debug info'
+  );
+  if (!@_) {
+    @_ = cwd;
+  }
   my $args = optargs( @_ );
 
   # set log level as appropriate
@@ -258,6 +259,16 @@ sub process_note {
 # ABSTRACT: Anki note generation made easy.
 
 __END__
+
+=pod
+
+=head1 NAME
+
+Anki::Import - Anki note generation made easy.
+
+=head1 VERSION
+
+version 0.009
 
 =head1 OVERVIEW
 
@@ -488,17 +499,85 @@ for verbosity and maximum verbosity, respectively.
 Invoking the C<anki_import> function mirrors the arguments used from the
 command line:
 
-=method anki_import($source_file, [$parent_dir], [$verbosity]);
+=head2 anki_import($source_file, [$parent_dir], [$verbosity]);
 
 See the L</Command line usage> for more details on the optional arguments.
 
-=head2 Development status
+=head1 REQUIRES
 
-This module is currently in the beta stages and is actively supported and
-maintained. Suggestions for improvement are welcome. There are likely bugs
-with the text formatting in certain edge cases but it should work well for
-normal, intended use.
+=over 4
+
+=item * L<Cwd|Cwd>
+
+=item * L<Exporter|Exporter>
+
+=item * L<Getopt::Args|Getopt::Args>
+
+=item * L<Log::Log4perl::Shortcuts|Log::Log4perl::Shortcuts>
+
+=item * L<Path::Tiny|Path::Tiny>
+
+=item * L<strict|strict>
+
+=item * L<warnings|warnings>
+
+=back
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Perldoc
+
+You can find documentation for this module with the perldoc command.
+
+  perldoc Anki::Import
+
+=head2 Websites
+
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
+
+=over 4
+
+=item *
+
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+L<https://metacpan.org/release/Anki-Import>
+
+=back
+
+=head2 Source Code
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+L<https://github.com/sdondley/Anki-Import>
+
+  git clone git://github.com/sdondley/Anki-Import.git
+
+=head1 BUGS AND LIMITATIONS
+
+You can make new bug reports, and view existing ones, through the
+web interface at L<https://github.com/sdondley/Anki-Import/issues>.
 
 =head1 SEE ALSO
 
 L<Anki documentation|https://apps.ankiweb.net/docs/manual.html>
+
+=head1 AUTHOR
+
+Steve Dondley <s@dondley.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2018 by Steve Dondley.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
