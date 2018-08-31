@@ -37,13 +37,10 @@ sub anki_import {
     alias => 'vv',
     comment => 'verbose information plus debug info'
   );
-  logd(\@_);
   if (!@_) {
     @_ = cwd;
   }
   my $args = optargs( @_ );
-  logd($args);
-  exit;
 
   # set log level as appropriate
   if ($args->{verbose}) {
