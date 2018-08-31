@@ -14,7 +14,7 @@ use Data::Dumper qw(Dumper);
 
 
 
-my $tests = 6; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 7; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
 
 plan tests => $tests;
