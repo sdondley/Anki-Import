@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.007
+version 0.008
 
 # OVERVIEW
 
@@ -272,6 +272,11 @@ from your repository :)
 [https://github.com/sdondley/Anki-Import](https://github.com/sdondley/Anki-Import)
 
     git clone git://github.com/sdondley/Anki-Import.git
+
+# BUGS AND LIMITATIONS
+
+You can make new bug reports, and view existing ones, through the
+web interface at [https://github.com/sdondley/Anki-Import/issues](https://github.com/sdondley/Anki-Import/issues).
 
 # SEE ALSO
 
