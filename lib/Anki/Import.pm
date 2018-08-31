@@ -20,6 +20,7 @@ my %notes      = ();      # data structure for storing notes
 # start here
 sub anki_import {
   my $file = shift;
+  logf('No file passed to Anki::Import. Aborting.') if !$file;
 
   # process arguments
   arg parent_dir => (
@@ -52,7 +53,6 @@ sub anki_import {
   }
   logi('Log level set');
 
-  logf('No file passed to Anki::Import. Aborting.') if !$file;
 
   # get and load the source file
   logi('Loading file');
