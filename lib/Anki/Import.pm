@@ -2,10 +2,10 @@ package Anki::Import ;
 
 use strict;
 use warnings;
+use Cwd;
 use Path::Tiny;
 use Getopt::Args;
 use Log::Log4perl::Shortcuts qw(:all);
-use Cwd;
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
@@ -44,14 +44,11 @@ sub anki_import {
 
   # set log level as appropriate
   if ($args->{verbose}) {
-    logd("Log level: debug");
     set_log_level('info');
   } elsif ($args->{vverbose}) {
     set_log_level('debug');
-    logd("Log level: debug");
   } else {
     set_log_level('error');
-    logd("Log level: error");
   }
   logi('Log level set');
 
@@ -263,6 +260,10 @@ sub process_note {
 # ABSTRACT: this is what the module does
 
 __END__
+
+=head1 NAME
+
+Anki Import
 
 =head1 OVERVIEW
 

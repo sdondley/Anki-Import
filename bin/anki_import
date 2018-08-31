@@ -6,5 +6,6 @@ use lib '/Users/stevedondley/perl/modules/Anki-Import/lib';
 use Data::Dumper qw(Dumper);
 use Anki::Import;
 
-print Dumper \@ARGV;
-anki_import(@ARGV);
+eval {
+  anki_import(@ARGV);
+}
