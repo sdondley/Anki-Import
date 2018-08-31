@@ -4,7 +4,7 @@ Anki::Import - this is what the module does
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # OVERVIEW
 
