@@ -334,17 +334,17 @@ existing note types in Anki. Individual notes in the source file are delineated
 by two or more blank lines. Fields are separated by a
 single blank line. Fields for each note should be in the same order as your
 Anki note types to make importing more automatic. All fields must have content
-or have indicattion that they should are intentionally blank.
+or left intentionally blank.
 
 To create an intionally blank field, add a single '`' (backtick) character on a
-line by itself with blank lines before and after
-the line with the single backtick.
+line by itself with blank lines before and after the line with the single
+backtick.
 
 See the L</Source file example> for more help.
 
-IMPORTANT: Save the source file as a plain text file in UTF-8 format. UTF-8 is
-likely the default format for your editor but check your editor's setting
-and documentation for further details.
+IMPORTANT: Save the source file as a plain text file with UTF-8 encoding. UTF-8
+is likely the default encoding method for your editor but check your editor's
+settings and documentation for further details.
 
 =head3 Assigning notes to note types
 You can indicate which note type a note belongs to by preceding notes with a
@@ -456,19 +456,19 @@ source data file.
 
 =head1 USAGE
 
-C<anki_import> can be run from the command line of rom within another perl
+C<anki_import> can be run from the command line or from within another perl
 script. It behaves the same way in both environments.
 
 =head2 Command line usage
 
-C<Anki::Import> provides a single command line command used to generate import
-files:
+C<Anki::Import> provides a command for generating import files:
 
     anki_import source_file [parent_dir] [verbosity_level]
 
 The command processes the source file and generates files to be imported into
-Anki with one file per note type. The files are placed in a directory called
-C<anki_import>.  The directory is placed in the current working directory.
+Anki, one file for each note type. These files are placed in a directory called
+C<anki_import_files>. This directory is placed in the current working directory
+by default.
 
 Note: All previously generated files of a particular note type will be
 overwritten by this command without warning.
@@ -476,16 +476,17 @@ overwritten by this command without warning.
 B<C<parent_dir>> is an optional argument containing the path you want C<Anki::Import>
 to save the files for output.
 
-<B<C<$verbosity>> can be set to either C<--verbose> (C<-v>) or C<--vverbose> (C<-vv>)
+B<C<$verbosity>> can be set to either C<--verbose> (C<-v>) or C<--vverbose> (C<-vv>)
 for verbosity and maximum verbosity, respectively.
 
 =head2 From a script
 
-Invoking the C<anki_import> mirrors the arguments in the script.
+Invoking the C<anki_import> function mirrors the arguments used from the
+command line:
 
 =method anki_import($source_file, [$parent_dir], [$verbosity]);
 
-See the L</Command line usage> for more details on the arguments.
+See the L</Command line usage> for more details on the optional arguments.
 
 =head2 Development status
 
