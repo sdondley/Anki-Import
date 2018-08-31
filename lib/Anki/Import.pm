@@ -257,17 +257,14 @@ sub process_note {
 
 
 1; # Magic true value
-# ABSTRACT: this is what the module does
+# ABSTRACT: Anki note generation made easy.
 
 __END__
 
-=head1 NAME
-
-Anki Import
-
 =head1 OVERVIEW
 
-Efficiently generate Anki notes with your text editor for easy import into Anki.
+Efficiently generate formatted Anki notes with your
+text editor for easy import into Anki.
 
 =head1 SYNOPSIS
 
