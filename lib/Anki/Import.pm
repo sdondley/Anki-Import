@@ -255,7 +255,6 @@ sub process_note {
   $out .= "\n";
 }
 
-
 1; # Magic true value
 # ABSTRACT: Anki note generation made easy.
 
