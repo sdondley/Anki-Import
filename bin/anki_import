@@ -9,6 +9,8 @@ eval {
   anki_import(@ARGV);
 }
 
+#ABSTRACT: command line command for the Anki::Import module
+
 __END__
 
 =head1 SYNOPSIS
@@ -22,5 +24,3 @@ Please see L<Anki::Import#Command line usage> for usage details.
 =head1 SEE ALSO
 
 L<Anki::Import>
-
-#ABSTRCT: command line command for the Anki::Import module
