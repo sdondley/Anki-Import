@@ -5,6 +5,7 @@
 !*/tmp
 *~
 *.sw*
+test.tgz
 #*.swo
 weaver.ini
 Makefile

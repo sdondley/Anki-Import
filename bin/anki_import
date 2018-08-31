@@ -8,3 +8,19 @@ use Anki::Import;
 eval {
   anki_import(@ARGV);
 }
+
+__END__
+
+=head1 SYNOPSIS
+
+    anki_import path/to/source_file.txt
+
+=head1 USAGE
+
+Please see L<Anki::Import#Command line usage> for usage details.
+
+=head1 SEE ALSO
+
+L<Anki::Import>
+
+#ABSTRCT: command line command for the Anki::Import module
