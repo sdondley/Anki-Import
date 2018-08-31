@@ -1,4 +1,6 @@
-Revision history for Anki-Import
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
 
 0.006     2018-08-31 10:33:46-04:00 America/New_York
 First release

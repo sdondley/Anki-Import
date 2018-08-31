@@ -2,7 +2,6 @@
 #PODNAME: anki_import
 use strict;
 use warnings;
-use lib '/Users/stevedondley/perl/modules/Anki-Import/lib';
 use Data::Dumper qw(Dumper);
 use Anki::Import;
 

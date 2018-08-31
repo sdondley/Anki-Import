@@ -1,6 +1,6 @@
 #/dist.ini
 /MANIFEST.SKIP
-/Anki-Import-*
+#/Anki-Import-*
 /tmp
 !*/tmp
 *~
