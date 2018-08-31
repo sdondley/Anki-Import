@@ -2,23 +2,29 @@
 use t::TestUtils;
 use Test::More;
 use Anki::Import;
+use Test::Exception;
+use Test::Warnings;
 
-my $tests = 1; # keep on line 17 for ,i (increment and ,d (decrement)
+
+
+
+
+
+
+
+
+
+my $tests = 2; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
-
-my @modules = qw/ Moose /;
-#my @methods = qw/ BUILD /;
-#my %attribs = (
-#   'attr'  => { type    => 'Str', lazy => 0, read => 'ro', req => 0,
-#                default => '', },
-#);
 
 plan tests => $tests;
 
-# class tests
-subtest 'module checks'   => \&module_check, @modules;
-#subtest 'attribute check' => \&attrib_check, ('Anki::Import', \%attribs);
-#subtest 'method checks'   => \&method_check, ('Anki::Import', @methods);
-
 # create an object
-my $obj = Anki::Import->new();
+my $obj = '';
+
+#dies_ok { anki_import(); } 'dies without file getting passed';
+#dies_ok { anki_import('askdjfakdewere2332'); } 'dies with bad file name';
+#lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
+#lives_ok { anki_import('t/data/source.anki', '~', '-vv'); } 'lives with good file name';
+lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
+#dies_ok { anki_import('t/data/source2.anki'); } 'dies when notes have different number of fields';
