@@ -1,5 +1,4 @@
 #/usr/bin/env perl
-use t::TestUtils;
 use Test::More;
 use Anki::Import;
 use Test::Exception;
@@ -14,7 +13,8 @@ use Data::Dumper qw(Dumper);
 
 
 
-my $tests = 7; # keep on line 17 for ,i (increment and ,d (decrement)
+
+my $tests = 8; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
 
 plan tests => $tests;
@@ -28,3 +28,5 @@ lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
 lives_ok { anki_import('t/data/source.anki', '~', '-vv'); } 'lives with good file name';
 lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
 dies_ok { anki_import('t/data/source2.anki'); } 'dies when notes have different number of fields';
+lives_ok { anki_import('t/data/tag_test.anki', '-vv'); } 'lives with good file name';
+#rmdir 'anki_import_files';

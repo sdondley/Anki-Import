@@ -7,7 +7,7 @@
 *.sw*
 test.tgz
 #*.swo
-weaver.ini
+#weaver.ini
 Makefile
 Makefile.old
 MYMETA.json
