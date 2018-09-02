@@ -81,10 +81,15 @@ sub anki_import {
   # do the stuff we came here for
   validate_src_file();
   logd(\%notes);
+
   my $pd = $args->{parent_dir};
   generate_importable_files($pd);
-  logi("Success! Your import files are in the $pd"
-    . '/anki_import_files directory') unless $args->{quiet};
+
+  unless ($args->{quiet}) {
+    set_log_level('info');
+    logi("Success! Your import files are in the $pd"
+      . '/anki_import_files directory') unless $args->{quiet};
+  }
   # fin
 }
 
