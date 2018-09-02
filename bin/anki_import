@@ -8,7 +8,7 @@ use Anki::Import;
 
 # hack to provide default path if not supplied by user
 if (!$ARGV[1] || $ARGV[1] =~ /^-([a-z]|[A-Z])/) {
-  splice @ARGV, 1, 0, cwd;
+  splice @ARGV, 0, 0, cwd;
 }
 
 eval {
