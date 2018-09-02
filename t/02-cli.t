@@ -19,7 +19,7 @@ diag( "Running my tests" );
 
 plan tests => $tests;
 
-stderr_like { `bin/anki_import` } qr/[FATAL].*No file/, 'dies without file';
+stderr_like { `bin/anki_import` } qr/usage: anki_import FILE/, 'dies without file';
 stderr_like { `bin/anki_import blah` } qr/[FATAL].*does not exist/, 'dies with bad file';
 lives_ok { `bin/anki_import t/data/source.anki` } 'can process good file';
 

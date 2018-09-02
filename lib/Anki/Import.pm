@@ -21,10 +21,20 @@ my @autotags   = ();      # for storing automated tags
 set_log_config('anki-import.cfg', __PACKAGE__);
 
 # argument processing
+arg file => (
+  isa => 'Str',
+  required => 1,
+  comment => 'the name of the source file'
+);
 arg parent_dir => (
   isa => 'Str',
   default => cwd,
-  comment => 'optional directory to save output files, default to current directory',
+  comment => 'optional directory to save output files, defaults to current directory',
+);
+opt quiet => (
+  isa => 'Bool',
+  alias => 'q',
+  comment => 'suppress success message at end'
 );
 opt verbose => (
   isa => 'Bool',
@@ -33,16 +43,19 @@ opt verbose => (
 );
 opt vverbose => (
   isa => 'Bool',
-  alias => 'vv',
+  alias => 'V',
   comment => 'verbose information plus debug info'
 );
 
 # start here
 sub anki_import {
-  my $file = shift;
-  logf('Aborting: No file passed to Anki::Import.') if !$file;
-
   my $args = optargs( @_ );
+
+  my $file = $args->{file};
+
+  if (!$file) {
+    logf('Aborting: No file passed to Anki::Import.');
+  }
 
   # set log level as appropriate
   if ($args->{verbose}) {
@@ -72,8 +85,7 @@ sub anki_import {
   logd(\%notes);
   my $pd = $args->{parent_dir};
   generate_importable_files($pd);
-  set_log_level('info');
-  logi("Source file successfully imported. Your files are in the $pd"
+  logi("Success! Your import files are in the $pd"
     . '/anki_import_files directory');
   # fin
 }
