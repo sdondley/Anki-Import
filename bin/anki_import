@@ -2,7 +2,7 @@
 #PODNAME: anki_import
 use strict;
 use warnings;
-use Data::Dumper qw(Dumper);
+use Cwd;
 use Anki::Import;
 
 
