@@ -1,0 +1,6 @@
+The Dist::Zilla object represents your {{c1::distribution}}.		perl, dist-zilla
+Dist::Zilla provides methods that implement dzil {{c1::commands}}.		perl,dist-zilla
+The <span style="font-family: courier; weight: bold;">{{c1::build}}</span> command tells Dist::Zilla to take all of its {{c2::configuration and input}} and produce a tarball suitable for release.		perl,dist-zilla
+The Dist::Zilla build occurs in {{c1::phases}}.		perl,dist-zilla
+Each of Dist::Zilla's phases is performed by {{c1::plugins}} and perform the {{c2::role}} associated with the phase.		perl,dist-zilla
+When one plugin can perform work in a given phase, the plugins are run in the order they were {{c1::listed in configuration}}.		perl,dist-zilla

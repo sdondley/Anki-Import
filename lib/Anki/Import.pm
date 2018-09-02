@@ -277,12 +277,16 @@ sub process_note {
     $field_out =~ s'(?<!\\)%(.*?)%'"<ul><li>" . join ("</li><li>", (split (/,\s*/, $1))) . "</li><\/ul>"'gme;
     $field_out =~ s/\\%/%/g;
 
+    $field_out =~ s/ $//;
+
     $field_out .= "\t";
     $out .= $field_out;
   }
+  $out =~ s/(<br>)+\t$|\t$//;
+
+  logd($out, 'processed_line');
 
   # clean up extraneous characters at the end of the line
-  $out =~ s/ *\t$|\t$|(<br>)+\t$//;
 
   # handle autotagging TODO: Ugly, needs cleanup
   if (@autotags && !$new_autotags) {
@@ -298,12 +302,10 @@ sub process_note {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
-    my @fields = split (/\t/, $out);
-    pop @fields if @note_tags;
-    push @fields, join (',', @new_tags);
-    $out = join "\t", @fields;
+    $out .= join (',', @new_tags);
   }
   $new_autotags = 0;
+
 
   # create cloze fields
   my $cloze_count = 1;
