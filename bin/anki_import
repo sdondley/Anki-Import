@@ -3,15 +3,14 @@
 use strict;
 use warnings;
 use Cwd;
-#use Data::Dumper qw(Dumper);
 use Anki::Import;
 
+eval { anki_import(@ARGV) };
 
-#print STDERR Dumper \@ARGV; #debug
-
-#print STDERR Dumper \@ARGV; #debug
-
-anki_import(@ARGV);
+# allow command output
+if ($@ =~ /^usage: anki_import/) {
+  print STDERR $@;
+}
 
 #ABSTRACT: command line command for the Anki::Import module
 

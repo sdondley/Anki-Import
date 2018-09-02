@@ -52,7 +52,6 @@ sub anki_import {
   my $args = optargs( @_ );
 
   my $file = $args->{file};
-
   if (!$file) {
     logf('Aborting: No file passed to Anki::Import.');
   }
@@ -66,7 +65,6 @@ sub anki_import {
     set_log_level('error');
   }
   logi('Log level set');
-
 
   # get and load the source file
   logi('Loading file');
@@ -86,7 +84,7 @@ sub anki_import {
   my $pd = $args->{parent_dir};
   generate_importable_files($pd);
   logi("Success! Your import files are in the $pd"
-    . '/anki_import_files directory');
+    . '/anki_import_files directory') unless $args->{quiet};
   # fin
 }
 
