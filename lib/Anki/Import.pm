@@ -40,7 +40,6 @@ opt vverbose => (
 # start here
 sub anki_import {
   my $file = shift;
-  logd($file);
   logf('Aborting: No file passed to Anki::Import.') if !$file;
 
   my $args = optargs( @_ );
@@ -71,7 +70,11 @@ sub anki_import {
   # do the stuff we came here for
   validate_src_file();
   logd(\%notes);
-  generate_importable_files($args->{parent_dir});
+  my $pd = $args->{parent_dir};
+  generate_importable_files($pd);
+  set_log_level('info');
+  logi("Source file successfully imported. Your files are in the $pd"
+    . '/anki_import_files directory');
   # fin
 }
 
