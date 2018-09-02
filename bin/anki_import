@@ -3,13 +3,18 @@
 use strict;
 use warnings;
 use Cwd;
+#use Data::Dumper qw(Dumper);
 use Anki::Import;
 
 
+#print STDERR Dumper \@ARGV; #debug
+
 # hack to provide default path if not supplied by user
-if (!$ARGV[1] || $ARGV[1] =~ /^-([a-z]|[A-Z])/) {
-  splice @ARGV, 0, 0, cwd;
+if ($ARGV[0] && (!$ARGV[1] || $ARGV[1] =~ /^-([a-z]|[A-Z])/)) {
+  splice @ARGV, 1, 0, cwd;
 }
+
+#print STDERR Dumper \@ARGV; #debug
 
 eval {
   anki_import(@ARGV);

@@ -40,7 +40,8 @@ opt vverbose => (
 # start here
 sub anki_import {
   my $file = shift;
-  logf('No file passed to Anki::Import. Aborting.') if !$file;
+  logd($file);
+  logf('Aborting: No file passed to Anki::Import.') if !$file;
 
   my $args = optargs( @_ );
 
@@ -58,8 +59,9 @@ sub anki_import {
   # get and load the source file
   logi('Loading file');
   my $path  = path($file);
+  logd($path);
   if (!path($file)->exists) {
-    logf("Source file named '$file' does not exist.");
+    logf("Aborting: Source file named '$file' does not exist.");
   };
   @lines = $path->lines_utf8;
 
