@@ -4,7 +4,7 @@ use Anki::Import;
 use Test::Exception;
 use Test::Warnings;
 use Data::Dumper qw(Dumper);
-
+use File::Path;
 
 
 
@@ -29,4 +29,4 @@ lives_ok { anki_import('t/data/source.anki', '~', '-vv'); } 'lives with good fil
 lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
 dies_ok { anki_import('t/data/source2.anki'); } 'dies when notes have different number of fields';
 lives_ok { anki_import('t/data/tag_test.anki', '-vv'); } 'lives with good file name';
-#rmdir 'anki_import_files';
+rmtree 'anki_import_files';
