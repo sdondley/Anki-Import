@@ -7,7 +7,6 @@ use Path::Tiny;
 use Getopt::Args;
 use Log::Log4perl::Shortcuts qw(:all);
 use Exporter qw(import);
-use Data::Dumper qw(Dumper);
 our @EXPORT = qw(anki_import);
 
 # set up variables
@@ -262,7 +261,7 @@ sub process_note {
   # clean up extraneous characters at the end of the line
   $out =~ s/ *\t$|\t$|(<br>)+\t$//;
 
-  # handle autotagging
+  # handle autotagging TODO: Ugly, needs cleanup
   if (@autotags && !$new_autotags) {
     $note->[-1][0] = '' if $note->[-1][0] =~ /^`\s*$/;
     my @note_tags = split (/,\s*/, $note->[-1][0]);
@@ -282,6 +281,14 @@ sub process_note {
     $out = join "\t", @fields;
   }
   $new_autotags = 0;
+
+  # create cloze fields
+  my $cloze_count = 1;
+  # TODO: should probably handle escaped braces just in case
+  while ($out =~ /\{\{\{(.*?)}}}/) {
+    $out =~ s/\{\{\{(.*?)}}}/{{c${cloze_count}::$1}}/s;
+    $cloze_count++;
+  }
 
   $out .= "\n";
 }
@@ -435,8 +442,8 @@ notes properly and getting the most out of C<Anki::Import>.
 
 Following a few simple rules, you can assign notes to a note type, preserve
 whitespace in fields, create bold text, create blank lines in your fields,
-indicate which fields are blank and generate simple lists. Study the
-example below for details.
+add tags, create cloze deletions, indicate which fields are blank and
+generate simple lists. Study the example below for details.
 
 Note: Lines containing only whitespace characters are treated as blank lines.
 
@@ -486,9 +493,9 @@ source data file.
                                          # all future notes unless overridden.
 
 
-    Put another question here.
+    Put {{{another question}}} here.     # Surround text with 3 braces for a cloze
 
-    Here is an answer that has
+    Here is an field that has
     `                                    # Insert a blank line into a field
     a blank line in it.                  # with a single backtick character
                                          # surrounded by lines with text.
@@ -571,6 +578,52 @@ must be enclosed in quotes.
     anki_import('script_file.txt', '/home/me', '--verbose');
 
 See the L</Command line usage> for more details on the optional arguments.
+
+=head1 INSTALLATION
+
+C<Anki::Import> is written in the Perl programming langauge. Therefore, you must
+have the Perl installed on your system. MacOS and *nix machines will have
+Perl already installed but the Windows operating system does not
+come pre-installed with Perl and so you may have to install it first before you
+can use C<Anki::Import>.
+
+If you are unsure if you have Perl installed, open a command prompt and type in:
+
+    perl -v
+
+If Perl is installed, it will report the version of Perl on your machine and
+other information. If Perl is not installed, you will get a "not recognized"
+error on Windows.
+
+=head2 Installing Strawberry Perl on Windows
+
+If you are on Windows and you do not have Perl installed, you can download a
+version of Perl called "Strawberry Perl" from the
+L<Strawberry Perl website|http://strawberryperl.com/>. Be sure to install the
+proper version (64 or 32 bit).
+
+Once installed successfully, see the next section for downloading and installing
+C<Anki::Import>.
+
+=head2 Installing Anki::Import with C<cpanm>
+
+C<Anki::Import> is easy to install if you have a Perl module called
+L<App::cpanimus> installed. This module provides a command, C<cpanm>, to easily
+downloading and installing modules from the Perl module repository called
+B<CPAN>. Simply run this command from the command line to install
+C<Anki::Import>:
+
+    cpanm Anki::Import
+
+Strawberry Perl for Windows has the C<cpanm> already installed.
+
+=head2 Installing Anki::Import without C<cpanm>
+
+If you do not have the C<cpan> command on your computer, you will need to use
+either the older CPAN shell method of installatoin or, as a last resort, perform
+manual installation. Refer to the
+C<Anki::Import> L<INSTALL file|https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL>
+for further details on these installation methods.
 
 =head2 Development status
 
