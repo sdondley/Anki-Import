@@ -1,3 +1,0 @@
-Question 1 		field 3,autotag4,autotag5,autotag6
-Question 1 		field 3,autotag4,autotag5,autotag6
-Question 1 		field 3,autotag4,autotag5,autotag6
