@@ -26,4 +26,4 @@ stderr_like { `bin/anki_import blah` } qr/[FATAL].*does not exist/, 'dies with b
 lives_ok { `bin/anki_import t/data/source.anki` } 'can process good file';
 #lives_ok { `bin/anki_import t/data/distzilla.anki -V` } 'can process good file';
 
-#rmtree 'anki_import_files';
+rmtree 'anki_import_files';
