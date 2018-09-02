@@ -18,7 +18,7 @@ my $ntype      = 'Basic'; # default note type
 my %notes      = ();      # data structure for storing notes
 my @autotags   = ();      # for storing automated tags
 
-change_config_file('anki-import.cfg', __PACKAGE__);
+set_log_config('anki-import.cfg', __PACKAGE__);
 
 # argument processing
 arg parent_dir => (
