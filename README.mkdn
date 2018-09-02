@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.012
+version 0.013
 
 # OVERVIEW
 
@@ -149,8 +149,8 @@ notes properly and getting the most out of `Anki::Import`.
 
 Following a few simple rules, you can assign notes to a note type, preserve
 whitespace in fields, create bold text, create blank lines in your fields,
-indicate which fields are blank and generate simple lists. Study the
-example below for details.
+add tags, create cloze deletions, indicate which fields are blank and
+generate simple lists. Study the example below for details.
 
 Note: Lines containing only whitespace characters are treated as blank lines.
 
@@ -200,9 +200,9 @@ source data file.
                                          # all future notes unless overridden.
 
 
-    Put another question here.
+    Put {{{another question}}} here.     # Surround text with 3 braces for a cloze
 
-    Here is an answer that has
+    Here is an field that has
     `                                    # Insert a blank line into a field
     a blank line in it.                  # with a single backtick character
                                          # surrounded by lines with text.
@@ -286,10 +286,55 @@ must be enclosed in quotes.
 
 See the ["Command line usage"](#command-line-usage) for more details on the optional arguments.
 
+# INSTALLATION
+
+`Anki::Import` is written in the Perl programming langauge. Therefore, you must
+have the Perl installed on your system. MacOS and \*nix machines will have
+Perl already installed but the Windows operating system does not
+come pre-installed with Perl and so you may have to install it first before you
+can use `Anki::Import`.
+
+If you are unsure if you have Perl installed, open a command prompt and type in:
+
+    perl -v
+
+If Perl is installed, it will report the version of Perl on your machine and
+other information. If Perl is not installed, you will get a "not recognized"
+error on Windows.
+
+## Installing Strawberry Perl on Windows
+
+If you are on Windows and you do not have Perl installed, you can download a
+version of Perl called "Strawberry Perl" from the
+[Strawberry Perl website](http://strawberryperl.com/). Be sure to install the
+proper version (64 or 32 bit).
+
+Once installed successfully, see the next section for downloading and installing
+`Anki::Import`.
+
+## Installing Anki::Import with `cpanm`
+
+`Anki::Import` is easy to install if you have a Perl module called
+[App::cpanimus](https://metacpan.org/pod/App::cpanimus) installed. This module provides a command, `cpanm`, to easily
+downloading and installing modules from the Perl module repository called
+**CPAN**. Simply run this command from the command line to install
+`Anki::Import`:
+
+    cpanm Anki::Import
+
+Strawberry Perl for Windows has the `cpanm` already installed.
+
+## Installing Anki::Import without `cpanm`
+
+If you do not have the `cpan` command on your computer, you will need to use
+either the older CPAN shell method of installatoin or, as a last resort, perform
+manual installation. Refer to the
+`Anki::Import` [INSTALL file](https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL)
+for further details on these installation methods.
+
 # REQUIRES
 
 - [Cwd](https://metacpan.org/pod/Cwd)
-- [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
 - [Exporter](https://metacpan.org/pod/Exporter)
 - [Getopt::Args](https://metacpan.org/pod/Getopt::Args)
 - [Log::Log4perl::Shortcuts](https://metacpan.org/pod/Log::Log4perl::Shortcuts)
@@ -332,6 +377,13 @@ You can make new bug reports, and view existing ones, through the
 web interface at [https://github.com/sdondley/Anki-Import/issues](https://github.com/sdondley/Anki-Import/issues).
 
 # SEE ALSO
+
+## Development status
+
+This module is currently in the beta stages and is actively supported and
+maintained. Suggestions for improvement are welcome. There are likely bugs
+with the text formatting in certain edge cases but it should work well for
+normal, intended use.
 
 [Anki documentation](https://apps.ankiweb.net/docs/manual.html)
 
