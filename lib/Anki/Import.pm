@@ -625,13 +625,13 @@ manual installation. Refer to the
 C<Anki::Import> L<INSTALL file|https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL>
 for further details on these installation methods.
 
+=head1 SEE ALSO
+
 =head2 Development status
 
 This module is currently in the beta stages and is actively supported and
 maintained. Suggestions for improvement are welcome. There are likely bugs
 with the text formatting in certain edge cases but it should work well for
 normal, intended use.
-
-=head1 SEE ALSO
 
 L<Anki documentation|https://apps.ankiweb.net/docs/manual.html>
