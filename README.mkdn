@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.014
+version 0.015
 
 # OVERVIEW
 
@@ -121,7 +121,7 @@ group the notes of a particular note type together).
 
 ### Tagging notes
 
-Place your comma seprated lit of tags in the last field. As long as there is
+Place your space seprated lit of tags in the last field. As long as there is
 one more field in the source files that fields in the note you are importing
 to, Anki will generate tags from the last field.
 
@@ -195,7 +195,7 @@ source data file.
 
     Wed.                                 # Question 3, Field 3
 
-    your_tags, go_here                   # We set up automated tags on this note.
+    your_tags go_here                    # We set up automated tags on this note.
     ^                                    # These tags will be applied to this and
                                          # all future notes unless overridden.
 
@@ -238,7 +238,7 @@ source data file.
     `                                    # blank line, followed by
     %an,unordered,list%                  # an ordered list.
 
-    new_tags, more_new_tags              # This and future notes will use these
+    new_tags more_new_tags               # This and future notes will use these
     ^                                    # newer automated tags.
 
 # USAGE
