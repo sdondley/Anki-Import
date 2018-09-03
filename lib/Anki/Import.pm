@@ -5,7 +5,7 @@ use warnings;
 use Cwd;
 use Path::Tiny;
 use Getopt::Args;
-use Log::Log4perl::Shortcuts qw(:all);
+use Log::Log4perl::Shortcuts 0.011 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 

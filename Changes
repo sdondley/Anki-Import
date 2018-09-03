@@ -1,5 +1,8 @@
 Revision history for Anki-Import
 
+{{$NEXT}}
+Require latest version of Log::Log4perl shortcuts
+
 0.015     2018-09-02 22:50:02-04:00 America/New_York
 
 0.014     2018-09-02 18:48:31-04:00 America/New_York
