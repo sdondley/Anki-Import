@@ -298,11 +298,12 @@ sub process_note {
       my $in_autotags = grep { $_ eq $note_tag } @autotags;
       push @new_tags, $note_tag unless $in_autotags;
     }
+    my $sep = @new_tags ? ' ' : '';
     foreach my $autotag (@autotags) {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
-    $out .= join (' ', @new_tags);
+    $out .= $sep . join (' ', @new_tags);
   }
   $new_autotags = 0;
 
