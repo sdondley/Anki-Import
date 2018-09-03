@@ -298,7 +298,6 @@ sub process_note {
   }
   $new_autotags = 0;
 
-
   # create cloze fields
   my $cloze_count = 1;
   # TODO: should probably handle escaped braces just in case
