@@ -230,7 +230,7 @@ sub process_note {
       logd($line);
       if ($line =~ /^\^\s*$/) {
         $field_out =~ s/\s*$//;
-        @autotags = split (/,\s*/, $field_out);
+        @autotags = split (/\s*/, $field_out);
         $new_autotags = 1;
         next;
       }
@@ -291,7 +291,7 @@ sub process_note {
   # handle autotagging TODO: Ugly, needs cleanup
   if (@autotags && !$new_autotags) {
     $note->[-1][0] = '' if $note->[-1][0] =~ /^`\s*$/;
-    my @note_tags = split (/,\s*/, $note->[-1][0]);
+    my @note_tags = split (/\s+/, $note->[-1][0]);
     logd(\@note_tags);
     my @new_tags = ();
     foreach my $note_tag (@note_tags) {
@@ -302,7 +302,7 @@ sub process_note {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
-    $out .= join (', ', @new_tags);
+    $out .= join (' ', @new_tags);
   }
   $new_autotags = 0;
 
@@ -439,7 +439,7 @@ group the notes of a particular note type together).
 
 =head3 Tagging notes
 
-Place your comma seprated lit of tags in the last field. As long as there is
+Place your space seprated lit of tags in the last field. As long as there is
 one more field in the source files that fields in the note you are importing
 to, Anki will generate tags from the last field.
 
@@ -513,7 +513,7 @@ source data file.
 
     Wed.                                 # Question 3, Field 3
 
-    your_tags, go_here                   # We set up automated tags on this note.
+    your_tags go_here                    # We set up automated tags on this note.
     ^                                    # These tags will be applied to this and
                                          # all future notes unless overridden.
 
@@ -556,7 +556,7 @@ source data file.
     `                                    # blank line, followed by
     %an,unordered,list%                  # an ordered list.
 
-    new_tags, more_new_tags              # This and future notes will use these
+    new_tags more_new_tags               # This and future notes will use these
     ^                                    # newer automated tags.
 
 =head1 USAGE
