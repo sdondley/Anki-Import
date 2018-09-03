@@ -2,21 +2,21 @@ question 1
 
 answer 1
 
-tag1, tag2, tag3
+tag1 tag2 tag3
 
 
 question 2
 
 answer 2
 
-tag3, tag4, tag5
+tag3 tag4 tag5
 
 
 question 3
 
 answer 3
 
-autotag1, autotag2, autotag3
+autotag1 autotag2 autotag3
 ^
 
 
@@ -38,7 +38,7 @@ question 6
 
 answer 6
 
-autotag4, autotag5, autotag6
+autotag4 autotag5 autotag6
 ^
 
 

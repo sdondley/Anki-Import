@@ -230,7 +230,7 @@ sub process_note {
       logd($line);
       if ($line =~ /^\^\s*$/) {
         $field_out =~ s/\s*$//;
-        @autotags = split (/\s*/, $field_out);
+        @autotags = split (/\s+/, $field_out);
         $new_autotags = 1;
         next;
       }
