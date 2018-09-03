@@ -302,7 +302,7 @@ sub process_note {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
-    $out .= join (',', @new_tags);
+    $out .= join (', ', @new_tags);
   }
   $new_autotags = 0;
 
