@@ -15,7 +15,7 @@ my $line_count = 0;       # count processed lines to give more helpful error msg
 my $cline      = '';      # current line getting processed
 my $lline      = '';      # last (previous) line processed
 my $ntype      = 'Basic'; # default note type
-my %notes      = ();      # data structure for storing notes
+my @notes      = ();      # array for storing notes
 my @autotags   = ();      # for storing automated tags
 
 set_log_config('anki-import.cfg', __PACKAGE__);
@@ -81,7 +81,7 @@ sub anki_import {
 
   # do the stuff we came here for
   validate_src_file();
-  logd(\%notes);
+  logd(\@notes);
 
   my $pd = $args->{parent_dir};
   generate_importable_files($pd);
@@ -140,7 +140,7 @@ sub validate_src_file {
     }
 
     logi('Storing note');
-    store_note($note);
+    push @notes, {ntype => $ntype, note => $note};
   }
 
 }
@@ -166,17 +166,6 @@ sub slurp_note {
   return \@note;
 }
 
-sub store_note {
-  my $note = shift;
-  logd($note);
-
-  if ($notes{$ntype}) {
-    push @{$notes{$ntype}}, $note;
-  } else {
-    $notes{$ntype} = [$note];
-  }
-}
-
 sub next_line {
   return 0 if !@lines; # last line in file is always blank
   $lline = $cline;
@@ -191,24 +180,24 @@ sub next_line {
 sub generate_importable_files {
   my $pd = shift;
   logi('Generating files for import');
+  my %filenames;
 
-  # loop over note types
-  foreach my $ntype (keys %notes) {
-    logi('Looping over note type');
-    my $file = '';
+  # loop over notes
+  foreach my $note (@notes) {
+    logi('Looping over notes');
 
-    # loop over notes
-    logi('Formatting notes for output');
-    foreach my $note (@{$notes{$ntype}}) {
-      $file .= process_note($note);
-    }
-    chomp $file;
-    logd($file);
+    my $line = process_note($note->{note});
 
-    # write our file out
-    logi('Writing notes out to file');
-    my $out_path = path($pd, "anki_import_files/${ntype}_notes_import.txt")->touchpath;
-    $out_path->spew([$file]);
+    # write to our file out
+    my $filename = $note->{ntype} . '_notes_import.txt';
+    $filenames{$filename}{content} .= $line;
+  }
+
+  logi('Writing notes out to file');
+  foreach my $file ( keys %filenames ) {
+    my $out_path = path($pd, "anki_import_files/$file")->touchpath;
+    chomp $filenames{$file}{content};
+    $out_path->spew($filenames{$file}{content});
   }
 }
 
@@ -303,7 +292,9 @@ sub process_note {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
-    $out .= $sep . join (' ', @new_tags);
+    logd(\@new_tags, 'new_tags');
+    my $new_tags = ($sep . join (' ', @new_tags));
+    $out =~ s/\t(.*?)$/\t$new_tags/;
   }
   $new_autotags = 0;
 

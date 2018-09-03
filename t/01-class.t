@@ -29,4 +29,5 @@ lives_ok { anki_import('t/data/source.anki', '~', '-V'); } 'lives with good file
 lives_ok { anki_import('t/data/source.anki'); } 'lives with good file name';
 dies_ok { anki_import('t/data/source2.anki'); } 'dies when notes have different number of fields';
 lives_ok { anki_import('t/data/tag_test.anki', '-V'); } 'lives with good file name';
+#lives_ok { anki_import('t/data/perl_modules.anki', '-V'); } 'lives with good file name';
 rmtree 'anki_import_files';
