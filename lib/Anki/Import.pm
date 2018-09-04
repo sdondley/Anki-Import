@@ -18,8 +18,8 @@ my $ntype      = 'Basic'; # default note type
 my @notes      = ();      # array for storing notes
 my @autotags   = ();      # for storing automated tags
 
-set_log_config('anki-import.cfg', __PACKAGE__);
-#set_log_config('test.cfg', __PACKAGE__);
+#set_log_config('anki-import.cfg', __PACKAGE__);
+set_log_config('test.cfg', __PACKAGE__);
 
 # argument processing
 arg file => (
@@ -217,12 +217,12 @@ sub process_note {
 
       # detect automated tags
       logd($line);
-      if ($line =~ /^\+\s*$/) {
+      if ($line =~ /^\+\s*$/ && !$in_code) {
         $field_out =~ s/\s*$//;
         push @autotags, split (/\s+/, $field_out);
         $new_autotags = 1;
       }
-      if ($line =~ /^\^\s*$/) {
+      if ($line =~ /^\^\s*$/ && !$in_code) {
         $field_out =~ s/\s*$//;
         @autotags = split (/\s+/, $field_out);
         $new_autotags = 1;
@@ -230,6 +230,9 @@ sub process_note {
       }
 
       if ($line =~ /^`\s*$/ && !$in_code) {
+        if ($field_out && $field_out !~ /^<br>+$/) {
+          $field_out .= '<br>';
+        }
         next;
       }
       if ($line =~ /^`{3,3}$/ && !$in_code) {
@@ -285,23 +288,24 @@ sub process_note {
 
   # handle autotagging TODO: Ugly, needs cleanup
   if (@autotags && !$new_autotags) {
+    logd($note->[-1][0], 'lnote_elem');
     $note->[-1][0] = '' if $note->[-1][0] =~ /^`\s*$/;
     my @note_tags = split (/\s+/, $note->[-1][0]);
-    logd(\@note_tags);
+    logd(\@note_tags, 'raw_note_tags');
     my @new_tags = ();
     foreach my $note_tag (@note_tags) {
       my $in_autotags = grep { $_ eq $note_tag } @autotags;
       push @new_tags, $note_tag unless $in_autotags;
     }
-    my $sep = @new_tags ? ' ' : '';
     foreach my $autotag (@autotags) {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
     logd(\@new_tags, 'new_tags');
-    my $new_tags = ($sep . join (' ', @new_tags));
+    my $new_tags = (join (' ', @new_tags));
     $new_tags =~ s/^\s+//;
     $out =~ s/\t([^\t]*?)$/\t$new_tags/;
+    logd($out, 'tagged_note');
   }
   $new_autotags = 0;
 
