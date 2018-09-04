@@ -276,7 +276,7 @@ sub process_note {
     $field_out .= "\t";
     $out .= $field_out;
   }
-  $out =~ s/(<br>)+\t$|\t$//;
+  $out =~ s/(<br>)+\t$//;
 
   logd($out, 'processed_line');
 
