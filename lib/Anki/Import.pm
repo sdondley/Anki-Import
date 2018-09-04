@@ -32,10 +32,11 @@ arg parent_dir => (
   default => cwd,
   comment => 'optional directory to save output files, defaults to current directory',
 );
-opt quiet => (
+opt quiet  => (
   isa => 'Bool',
   alias => 'q',
-  comment => 'suppress success message at end'
+  default => 1,
+  comment => 'suppress success msg'
 );
 opt verbose => (
   isa => 'Bool',
@@ -86,7 +87,7 @@ sub anki_import {
   my $pd = $args->{parent_dir};
   generate_importable_files($pd);
 
-  unless ($args->{quiet}) {
+  unless ($args->{'quiet'}) {
     set_log_level('info');
     logi("Success! Your import files are in the $pd"
       . '/anki_import_files directory') unless $args->{quiet};
@@ -425,10 +426,11 @@ C<#note_type> comment at the beginning of a line. You can choose any note type
 name you wish but it is recommended that you use note type names similar to
 those that exist in your Anki database to make importing the notes easier.
 
-Any notes appearing after a note type comment will be assigned to that note
-type until a new note type comment is encountered (see the example in the next
-section). If no note types are indicated in your source file, the "Basic"
-note type is used.
+Note type comments not only assign a note type to the next note, but any
+notes therafter until a new note type comment is encountered (see the example
+in the next section). So note type comments actually delineate a note type
+section. If no note types are indicated in your source file, the
+"Basic" note type is used.
 
 Note types are used to help C<Anki::Import> ensure other notes of the same type
 have the same number of fields. If the notes assigned to a particular note type
@@ -457,6 +459,9 @@ To suppress the application of an automated tag from the list of automated tags
 for a particular note, include that tag in the tag field and it will not be
 tagged with that term for that one note.
 
+To add a new tag to the already existing set of tags, enter the tags on
+a line followed by a new line with a single '+' sign on it by itself.
+
 Note: If you use tags on any of your notes in a parcitular note type, you must
 use tags on all of your notes or indicate that the tag field should be left
 blank with a '`' (backtick) character on a line by itself.
@@ -479,7 +484,8 @@ Below is an example of how to format a source data file. Note that the column on
 the right containing comments for this example are not permitted in an actual
 source data file.
 
-    # Basic                              # Any notes below here to the next
+    # Basic                              # We start a note section here. Any
+                                         # notes below here to the next
                                          # note type comment are assigned to
                                          # the 'Basic' note type
 
@@ -514,8 +520,10 @@ source data file.
 
     Wed.                                 # Question 3, Field 3
 
-    your_tags go_here                    # We set up automated tags on this note.
-    ^                                    # These tags will be applied to this and
+    your_tags go_here                    # We set up automated tags on this note
+    ^                                    # with the '^' symbol on a line by itself
+                                         # immediately after out tag list.
+                                         # These tags will be applied to this and
                                          # all future notes unless overridden.
 
 
@@ -525,10 +533,12 @@ source data file.
     `                                    # Insert a blank line into a field
     a blank line in it.                  # with a single backtick character
                                          # surrounded by lines with text.
-    go_here                              # The note will *not* be tagged with
-                                         # 'go_here' but it will still be
-                                         # tagged with 'your_tags' from
-                                         # the automated tag list.
+    go_here                              # We set autotags in the last note and
+                                         # they will carry forward to this note
+                                         # except for the exclusions we place
+                                         # here. This note will *not* be tagged
+                                         # with 'go_here' but it will still be
+                                         # tagged under 'your_tags'.
 
 
 
@@ -544,12 +554,11 @@ source data file.
 
     This is %comma,delimted,text%        # Bullet lists with %item1,item2,item3%
 
-    '                                    # To suppress all tags for a note,
-                                         # leave the tag field blank with a
-                                         # backtick.
+    '                                    # The tags field is left blank. But all
+                                         # the auto tags will still be applied.
 
 
-    Final question                       # Field 1
+    Another question                     # Field 1
 
     `                                    # Field 2 is blank.
 
@@ -559,6 +568,15 @@ source data file.
 
     new_tags more_new_tags               # This and future notes will use these
     ^                                    # newer automated tags.
+
+
+    #basic                               # switch back to a 'basic' note type
+    Last question
+
+    Last anser
+
+    new_tag                              # We add a new_tag to our autotag list
+    +                                    # with the '+' sign.
 
 =head1 USAGE
 
@@ -570,24 +588,30 @@ script. It behaves the same way in both environments.
 The C<Anki::Import> module installs the C<anki_import> command line command
 for generating import files which is used as follow:
 
-    anki_import source_file [parent_dir] [verbosity_level]
+    anki_import source_file [parent_dir] [--verbosity_level]
 
-    B<Example:> anki_import notes.text /home/me --verbose
+    B<Example:> anki_import pop_quiz.txt /home/me --verbose
 
-C<anki_import> processes the source file and generates files to be imported into
+C<anki_import> processes the C<source_file> and generates files to be imported into
 Anki, one file for each note type. These files are placed in a directory called
 C<anki_import_files>. This directory is placed in the current working directory
 by default.
 
-Note: Previously generated files of a particular note type will be
-overwritten by this command without warning.
+Note that previously generated files already located in the C<anki_import_files>
+directory the command is outputting to will will be overwritten without warning.
+Add a unique (C<parent_dir> path to help prevent this.
 
 B<C<parent_dir>> is an optional argument containing the path you want C<Anki::Import>
-to save the files for output. You may use C<~> (tilde) to represent the home
+to save the files for output. You may use a C<~> (tilde) to represent the home
 directory for the current user.
 
-B<C<$verbosity>> can be set to either C<--verbose> (C<-v>) or C<--vverbose> (C<-vv>)
-for verbosity and maximum verbosity, respectively.
+B<C<$verbosity>> options can be set to C<--verbose> or C<--vverbose>
+(very verbose) or C<--quiet>. The verbosity options have aliases for your
+typing convenience: C<-v>, C<-V> and C<-q>, respectively.
+
+Use the C<--verbose> or C<--vverbose> option to help troubleshoot source file
+processing issues. The (C<--quiet>) option suppresses the success
+message printed upon successful processing of the source file.
 
 =head2 From a script
 
@@ -603,7 +627,9 @@ must be enclosed in quotes.
 
     anki_import('script_file.txt', '/home/me', '--verbose');
 
-See the L</Command line usage> for more details on the optional arguments.
+See the L</Command line usage> for more details on the optional arguments. By
+default, the verbosity output from the function call is (C<--quiet>. If you
+want the function call to output a success message, use (C<--no-quiet>);
 
 =head1 INSTALLATION
 
@@ -652,6 +678,8 @@ C<Anki::Import> L<INSTALL file|https://metacpan.org/source/STEVIED/Anki-Import-0
 for further details on these installation methods.
 
 =head1 SEE ALSO
+
+=cut
 
 =head2 Development status
 
