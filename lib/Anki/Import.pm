@@ -217,7 +217,7 @@ sub process_note {
 
       # detect automated tags
       logd($line);
-      if ($line =~ /^+\s*$/) {
+      if ($line =~ /^\+\s*$/) {
         $field_out =~ s/\s*$//;
         push @autotags, split (/\s+/, $field_out);
         $new_autotags = 1;
