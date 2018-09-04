@@ -18,8 +18,8 @@ my $ntype      = 'Basic'; # default note type
 my @notes      = ();      # array for storing notes
 my @autotags   = ();      # for storing automated tags
 
-set_log_config('anki-import.cfg', __PACKAGE__);
-#set_log_config('test.cfg', __PACKAGE__);
+#set_log_config('anki-import.cfg', __PACKAGE__);
+set_log_config('test.cfg', __PACKAGE__);
 
 # argument processing
 arg file => (
@@ -203,6 +203,7 @@ sub generate_importable_files {
 
 sub process_note {
   my $note = shift;
+  logd($note, 'note_2b_processed');
 
   my $new_autotags = 0;
   my $out = '';
@@ -210,7 +211,6 @@ sub process_note {
   foreach my $field (@$note) {
     my $in_code = 0;   # tracks if we are preserving whitespace
     my $field_out = '';
-    my $last_field = '';
 
     # loop over lines in field
     foreach my $line (@$field) {
@@ -276,7 +276,7 @@ sub process_note {
     $field_out .= "\t";
     $out .= $field_out;
   }
-  $out =~ s/(<br>)+\t$//;
+  $out =~ s/(<br>)+\t$|\t$//;
 
   logd($out, 'processed_line');
 
