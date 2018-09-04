@@ -210,7 +210,6 @@ sub process_note {
   my @fields = ();
   # loop over fields
   foreach my $field (@$note) {
-    logd('fuck', 'fuck');
     my $in_code = 0;   # tracks if we are preserving whitespace
     my $field_out = '';
 
