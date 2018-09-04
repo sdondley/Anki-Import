@@ -206,47 +206,48 @@ sub process_note {
   logd($note, 'note_2b_processed');
 
   my $new_autotags = 0;
-  my $out = '';
+  my @fields = ();
   # loop over fields
   foreach my $field (@$note) {
+    logd('fuck', 'fuck');
     my $in_code = 0;   # tracks if we are preserving whitespace
     my $field_out = '';
 
     # loop over lines in field
+    my @lines = ('');
     foreach my $line (@$field) {
+      my $last_line = \$lines[-1];
 
       # detect automated tags
       logd($line);
       if ($line =~ /^\+\s*$/ && !$in_code) {
-        $field_out =~ s/\s*$//;
-        push @autotags, split (/\s+/, $field_out);
+        push @autotags, split (/\s+/, $$last_line);
         $new_autotags = 1;
       }
       if ($line =~ /^\^\s*$/ && !$in_code) {
-        $field_out =~ s/\s*$//;
-        @autotags = split (/\s+/, $field_out);
+        @autotags = split (/\s+/, $$last_line);
         $new_autotags = 1;
         next;
       }
 
       if ($line =~ /^`\s*$/ && !$in_code) {
-        if ($field_out && $field_out !~ /^<br>+$/) {
-          $field_out .= '<br>';
+        if ($$last_line && $$last_line !~ /^<br>+$/) {
+          $$last_line .= '<br>';
         }
         next;
       }
       if ($line =~ /^`{3,3}$/ && !$in_code) {
         $in_code = 1;
-        if ($field_out) {
-          $field_out .= '<br><br>';
+        if ($$last_line) {
+          $$last_line .= '<br><br>';
         }
-        $field_out .= '<div style="text-align: left; font-family: courier; white-space: pre;">';
+        $$last_line .= '<div style="text-align: left; font-family: courier; white-space: pre;">';
         next;
       }
 
       # exit whitespace preservation mode
       if ($line =~ /^`{3,3}$/ && $in_code) {
-        $field_out .= "</div><br><br>";
+        $$last_line .= "</div><br><br>";
         $in_code = 0;
         next;
       }
@@ -255,42 +256,38 @@ sub process_note {
         $line =~ s/(?<!\\)`/\\`/g;
         $line =~ s/(?<!\\)\*/\\*/g;
         $line =~ s/(?<!\\)%/\\%/g;
-        $field_out .= $line . "<br>";
+        $$last_line .= $line . "<br>";
       } else {
-        $field_out .= "$line ";
+        push @lines, $line;
       }
     }
     # handle formatting codes in text, preserve escaped characters
     logd($field_out, 'field_out');
+    my $field = join ' ', @lines;
 
     # backticked characters
-    $field_out =~ s/(?<!\\)`(.*?)`/<span style="font-family: courier; weight: bold;">$1<\/span>/gm;
-    $field_out =~ s/\\`/`/g;
+    $field =~ s/(?<!\\)`(.*?)`/<span style="font-family: courier; weight: bold;">$1<\/span>/gm;
+    $field =~ s/\\`/`/g;
 
     # bold
-    $field_out =~ s/(?<!\\)\*(.*?)\*/<span style="weight: bold;">$1<\/span>/gm;
-    $field_out =~ s/\\\*/*/g;
+    $field =~ s/(?<!\\)\*(.*?)\*/<span style="weight: bold;">$1<\/span>/gm;
+    $field =~ s/\\\*/*/g;
 
     # unordered lists
-    $field_out =~ s'(?<!\\)%(.*?)%'"<ul><li>" . join ("</li><li>", (split (/,\s*/, $1))) . "</li><\/ul>"'gme;
-    $field_out =~ s/\\%/%/g;
+    $field =~ s'(?<!\\)%(.*?)%'"<ul><li>" . join ("</li><li>", (split (/,\s*/, $1))) . "</li><\/ul>"'gme;
+    $field =~ s/\\%/%/g;
 
-    $field_out =~ s/ $//;
+    $field =~ s/(<br>)+$//;
+    push @fields, $field;
 
-    $field_out .= "\t";
-    $out .= $field_out;
   }
-  $out =~ s/(<br>)+\t$|\t$//;
-
-  logd($out, 'processed_line');
 
   # clean up extraneous characters at the end of the line
 
   # handle autotagging TODO: Ugly, needs cleanup
   if (@autotags && !$new_autotags) {
     logd($note->[-1][0], 'lnote_elem');
-    $note->[-1][0] = '' if $note->[-1][0] =~ /^`\s*$/;
-    my @note_tags = split (/\s+/, $note->[-1][0]);
+    my @note_tags = split (/\s+/, $fields[-1]);
     logd(\@note_tags, 'raw_note_tags');
     my @new_tags = ();
     foreach my $note_tag (@note_tags) {
@@ -302,12 +299,13 @@ sub process_note {
       push @new_tags, $autotag if !$discard_autotag;
     }
     logd(\@new_tags, 'new_tags');
-    my $new_tags = (join (' ', @new_tags));
-    $new_tags =~ s/^\s+//;
-    $out =~ s/\t([^\t]*?)$/\t$new_tags/;
-    logd($out, 'tagged_note');
+    my $new_tags = join (' ', @new_tags);
+    #$new_tags =~ s/^\s+//;
+    $fields[-1] = $new_tags;
   }
   $new_autotags = 0;
+
+  my $out = join ("\t", @fields);
 
   # create cloze fields
   my $cloze_count = 1;
