@@ -22,7 +22,7 @@ plan tests => $tests;
 set_log_config('test.cfg', 'Anki::Import');
 
 stderr_like { `bin/anki_import` } qr/usage: anki_import FILE/, 'dies without file';
-stderr_like { `bin/anki_import blah` } qr/[FATAL].*does not exist/, 'dies with bad file';
+stderr_like { `bin/anki_import blasdfah` } qr/[FATAL].*does not exist/, 'dies with bad file';
 lives_ok { `bin/anki_import t/data/source.anki` } 'can process good file';
 #lives_ok { `bin/anki_import t/data/distzilla.anki -V` } 'can process good file';
 
