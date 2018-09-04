@@ -18,8 +18,8 @@ my $ntype      = 'Basic'; # default note type
 my @notes      = ();      # array for storing notes
 my @autotags   = ();      # for storing automated tags
 
-#set_log_config('anki-import.cfg', __PACKAGE__);
-set_log_config('test.cfg', __PACKAGE__);
+set_log_config('anki-import.cfg', __PACKAGE__);
+#set_log_config('test.cfg', __PACKAGE__);
 
 # argument processing
 arg file => (
