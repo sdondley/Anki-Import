@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.018
+version 0.019
 
 # OVERVIEW
 
@@ -327,7 +327,7 @@ Strawberry Perl for Windows has the `cpanm` already installed.
 ## Installing Anki::Import without `cpanm`
 
 If you do not have the `cpan` command on your computer, you will need to use
-either the older CPAN shell method of installatoin or, as a last resort, perform
+either the older CPAN shell method of installation or, as a last resort, perform
 manual installation. Refer to the
 `Anki::Import` [INSTALL file](https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL)
 for further details on these installation methods.
