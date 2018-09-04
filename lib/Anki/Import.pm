@@ -258,6 +258,7 @@ sub process_note {
       }
     }
     # handle formatting codes in text, preserve escaped characters
+    logd($field_out, 'field_out');
 
     # backticked characters
     $field_out =~ s/(?<!\\)`(.*?)`/<span style="font-family: courier; weight: bold;">$1<\/span>/gm;
@@ -299,7 +300,8 @@ sub process_note {
     }
     logd(\@new_tags, 'new_tags');
     my $new_tags = ($sep . join (' ', @new_tags));
-    $out =~ s/\t(.*?)$/\t$new_tags/;
+    $new_tags =~ s/^\s+//;
+    $out =~ s/\t([^\t]*?)$/\t$new_tags/;
   }
   $new_autotags = 0;
 
@@ -310,6 +312,7 @@ sub process_note {
     $out =~ s/\{\{\{(.*?)}}}/{{c${cloze_count}::$1}}/s;
     $cloze_count++;
   }
+  logd($out, 'out');
 
   $out .= "\n";
 }

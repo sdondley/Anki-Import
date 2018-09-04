@@ -1,0 +1,406 @@
+#basic
+What is the name of the book used in the course?
+
+Structure and Interpretation of Computer Programs
+
+programming_concepts cs61A_lect1
+^
+
+
+#basic
+What programming language is used in the course?
+
+Scheme
+
+`
+
+
+#basic
+What is the implementation of scheme used?
+
+STk
+
+`
+
+
+#cloze
+Scheme uses {{{post}}}fix operators.
+
+`
+
+scheme
+
+
+
+#csnip
+```
+(+ 2 3)
+```
+
+adds 2 + 3; results in '5'
+
+`
+
+
+#csnip
+```
+(+ 2 2 2)
+```
+
+adds 2 + 2 + 2; results in '6'
+
+`
+
+
+#csnip
+```
+(+)
+```
+
+results in '0'.
+
+`
+
+
+#csnip
+```
+(*)
+```
+
+results in '1' because that's the identity element for the multiplication
+operator
+
+`
+
+
+#csnip
+```
+(/)
+```
+
+results in error, division by 0
+
+`
+
+
+#csnip
+```
++
+```
+
+Does not result in an error. '+' is interpreted as a function.
+
+`
+
+
+#cquest
+How do you represent a literal '+'?
+
+```
+'+
+```
+
+`
+
+`
+
+
+#csnip
+```
+'hello
+```
+
+evaluates to the word "hello"
+
+`
+
+
+#cans
+Demonstrate how to take the result of one function to produce arguments to
+another function (known as composition of functions).
+
+```
+(+ ( 3 * 10 ) ( 2 + 3) )
+```
+
+adds 30 + 5, or 35
+
+`
+
+
+#csnip
+```
+(first 'hello)
+```
+
+evaluates to "h", the first letter of the word
+
+`
+
+
+#csnip
+```
+(last 'hello)
+```
+
+evaluates to "o", the last letter of the word
+
+`
+
+
+#csnip
+```
+(butfirst 'hello)
+```
+
+evaluates to "ello', all but the first letter of the word
+
+`
+
+
+#csnip
+```
+(butlast 'hello)
+```
+
+evaluate to "hell', all but the first letter of the word
+
+`
+
+
+#csnip
+```
+(bf 'scheme)
+```
+
+evaluates to "scheme", all but the first letter of the word (shorthand for the
+`butfirst` command)
+
+`
+
+
+#csnip
+```
+(word 'now 'here)
+```
+
+evaluates to "nowhere" (concatenates the words)
+
+`
+
+
+#cloze
+The `word` command is known as a {{{constructor}}} function.
+
+`
+
+`
+
+
+#csnip
+```
+(sentence 'now 'here')
+```
+
+evaluate to ("now here") with a space between the words surrounded by parentheses
+
+`
+
+
+#csnip
+```
+'(magical mystery tour'
+```
+
+(magical mystery tour)
+
+`
+
+
+#csnip
+```
+(first '(got to get you into my life))
+```
+
+evaluate to "got", the first word of the sentence
+
+`
+
+
+#csnip
+```
+(first (bf '(a hard days night)))
+```
+
+evaluate to "hard"
+
+`
+
+
+#csnip
+```
+(first (first (bf '(she loves you))))
+```
+
+evaluates to "l"
+
+`
+
+
+#csnip
+```
+(define pi 3.14)
+(* pi 5 5)
+```
+
+The first line sets the value of `pi` to 3.14. The second line multiplies `pi`
+by 25 (5 * 5).
+
+`
+
+
+#csnip
+```
+(define (square x)
+    (* x x)
+(square (+ 2 3))
+```
+
+It defines a function called `square` that takes a single argument called `x`.
+The body of the function takes `x` and multiplies it by itself. The third line
+calls the `square` function with result of the express `2 + 3` (or 5), which
+returns an answer of 25 (5 squared).
+
+`
+
+
+#basic
+Why is the `define` function considered an exception to the way scheme normally
+processes arguments?
+
+Because it does not evaluate the arguments that are passed to it.
+
+`
+
+
+#basic
+Describe what we mean when we say a function is a *special form* function?
+
+It is a function that does not process arguments the way other scheme functions
+do. The `define` function is an example.
+
+`
+
+
+#cquest
+What does the following code evaluate to and why?
+
+```
+(define hello (+ 2 3))
+hello
+```
+
+The first line evaluates the word "hello," the function that was defined. It
+does not evaluate to "5" because `define` does not evaluate its arguments. The
+second line evaluates to 5, the result of the expression, 2 + 3.
+
+`
+
+
+#cquest
+What is the code in bold referred to as?
+
+```
+(define (square <b>x</b>)
+    (* x x)
+(square (+ 2 3))
+```
+
+the formal parameter, the argument that is passed to the function
+
+`
+
+
+
+#cquest
+What is the code in bold referred to as?
+
+```
+(define (square x)
+    <b>(* x x)</b>
+(square (+ 2 3))
+```
+
+the body
+
+`
+
+
+
+#cquest
+What is the code in bold referred to as?
+
+```
+(define (square x)
+    <b>(* x x)</b>
+(square <b>(+ 2 3)</b>)
+```
+
+the argument expression
+
+`
+
+
+#cquest
+What is the name for the result of the argument expression, `(+ 2 3) passed to
+the function called?
+
+```
+(define (square x)
+    (* x x)
+(square (+ 2 3))
+```
+
+the actual argument value
+
+`
+
+
+#cquest
+What is a predicate function?
+
+```
+Example: `(if (equal? (last 'y) 'y)`
+```
+
+It is a function that returns true or false and is denoted with a "?" at the
+end.
+
+`
+
+
+#csnip
+```
+(define (plural wd)
+    (if (equal? (last wd) 'y)
+        (word (bl wd) 'ies)
+	(word wd 's)))
+(plural book)
+(plural fly)
+(plural boys)
+```
+
+Line 1 defines a function called `plural` that has one formal parameter called
+`wd`.
+`
+Line 2 tests to see if `wd` ends in "y". If it does, line 3 will replace the
+"y" with "ies," otherwise, line 4 will add an "s" to the word.
+`
+Lines 5-7 evaluate to the pluralized versions of the words. However, there is a
+bug and with line 7, resulting in "boies." As an exercise, the bug should be
+fixed.
+
+`
+
+
+
