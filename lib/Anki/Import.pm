@@ -217,6 +217,11 @@ sub process_note {
 
       # detect automated tags
       logd($line);
+      if ($line =~ /^+\s*$/) {
+        $field_out =~ s/\s*$//;
+        push @autotags, split (/\s+/, $field_out);
+        $new_autotags = 1;
+      }
       if ($line =~ /^\^\s*$/) {
         $field_out =~ s/\s*$//;
         @autotags = split (/\s+/, $field_out);
@@ -636,7 +641,7 @@ Strawberry Perl for Windows has the C<cpanm> already installed.
 =head2 Installing Anki::Import without C<cpanm>
 
 If you do not have the C<cpan> command on your computer, you will need to use
-either the older CPAN shell method of installatoin or, as a last resort, perform
+either the older CPAN shell method of installation or, as a last resort, perform
 manual installation. Refer to the
 C<Anki::Import> L<INSTALL file|https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL>
 for further details on these installation methods.
