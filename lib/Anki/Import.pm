@@ -9,6 +9,10 @@ use Log::Log4perl::Shortcuts 0.011 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
+# change log config to test for development for fine-tuned control over messaes
+set_log_config('anki-import.cfg', __PACKAGE__);
+#set_log_config('test.cfg', __PACKAGE__);
+
 # set up variables
 my @lines;                # lines from source file
 my $line_count = 0;       # count processed lines to give more helpful error msg
@@ -17,9 +21,6 @@ my $lline      = '';      # last (previous) line processed
 my $ntype      = 'Basic'; # default note type
 my @notes      = ();      # array for storing notes
 my @autotags   = ();      # for storing automated tags
-
-set_log_config('anki-import.cfg', __PACKAGE__);
-#set_log_config('test.cfg', __PACKAGE__);
 
 # argument processing
 arg file => (
@@ -58,6 +59,9 @@ sub anki_import {
     logf('Aborting: No file passed to Anki::Import.');
   }
 
+  # set parent directory
+  my $pd = $args->{parent_dir};
+
   # set log level as appropriate
   if ($args->{verbose}) {
     set_log_level('info');
@@ -70,28 +74,26 @@ sub anki_import {
 
   # get and load the source file
   logi('Loading file');
-  my $path  = path($file);
-  logd($path);
+  my $path  = path($file); logd($path);
   if (!path($file)->exists) {
     logf("Aborting: Source file named '$file' does not exist.");
   };
-  @lines = $path->lines_utf8;
+  @lines = $path->lines_utf8; logi('Source file loaded.');
 
   # pad data with a blank line to make it easier to process
   push @lines, '';
 
   # do the stuff we came here for
-  validate_src_file();
-  logd(\@notes);
-
-  my $pd = $args->{parent_dir};
+  validate_src_file(); logd(\@notes);
   generate_importable_files($pd);
 
+  # print a success message
   unless ($args->{'quiet'}) {
     set_log_level('info');
     logi("Success! Your import files are in the $pd"
       . '/anki_import_files directory') unless $args->{quiet};
   }
+
   # fin
 }
 
@@ -171,16 +173,19 @@ sub next_line {
   return 0 if !@lines; # last line in file is always blank
   $lline = $cline;
   $cline = (shift @lines || '');
+
+  # do some cleanup
   chomp $cline;
+  $cline =~ s/\t/    /g; # replace tabs with spaces
+
   ++$line_count;
 }
-
 
 # functions for second pass parsing and formatting of source data
 # and creation of import files
 sub generate_importable_files {
-  my $pd = shift;
-  logi('Generating files for import');
+  my $pd = shift; logi('Generating files for import');
+
   my %filenames;
 
   # loop over notes
@@ -189,7 +194,7 @@ sub generate_importable_files {
 
     my $line = process_note($note->{note});
 
-    # write to our file out
+    # add our processed note to our data
     my $filename = $note->{ntype} . '_notes_import.txt';
     $filenames{$filename}{content} .= $line;
   }
@@ -202,67 +207,78 @@ sub generate_importable_files {
   }
 }
 
+# the meat of the matter
+# TODO: break up into shorter functions for readability
 sub process_note {
-  my $note = shift;
-  logd($note, 'note_2b_processed');
+  my $note = shift; logd($note, 'note_2b_processed');
 
-  my $new_autotags = 0;
   my @fields = ();
-  # loop over fields
+  my $new_autotags = 0; # flag raised if autotag line found
+
+  # loop over note fields
   foreach my $field (@$note) {
-    my $in_code = 0;   # tracks if we are preserving whitespace
+    my $ws_mode = 0;   # tracks if we are preserving whitespace
     my $field_out = '';
 
-    # loop over lines in field
-    my @lines = ('');
+    # loop over lines in field and process accordingly
+    my @lines = (''); # can't take a reference to nothing
     foreach my $line (@$field) {
-      my $last_line = \$lines[-1];
+      my $last_line = \$lines[-1]; # just to make it easier to type
 
-      # detect automated tags
+      # detect autotags
       logd($line);
-      if ($line =~ /^\+\s*$/ && !$in_code) {
+      if ($line =~ /^\+\s*$/ && !$ws_mode) {
         push @autotags, split (/\s+/, $$last_line);
         $new_autotags = 1;
       }
-      if ($line =~ /^\^\s*$/ && !$in_code) {
+      if ($line =~ /^\^\s*$/ && !$ws_mode) {
         @autotags = split (/\s+/, $$last_line);
         $new_autotags = 1;
         next;
       }
 
-      if ($line =~ /^`\s*$/ && !$in_code) {
+      # blanks lines not in non-whitespace mode
+      if ($line =~ /^`\s*$/ && !$ws_mode) {
         if ($$last_line && $$last_line !~ /^<br>+$/) {
           $$last_line .= '<br>';
         }
         next;
       }
-      if ($line =~ /^`{3,3}$/ && !$in_code) {
-        $in_code = 1;
+
+      # enter whitespace mode and adding appropriate HTML
+      if ($line =~ /^`{3,3}$/ && !$ws_mode) {
+        $ws_mode = 1;
+
+        # add a couple of blank lines to previous line
         if ($$last_line) {
           $$last_line .= '<br><br>';
         }
+
         $$last_line .= '<div style="text-align: left; font-family: courier; white-space: pre;">';
         next;
       }
 
-      # exit whitespace preservation mode
-      if ($line =~ /^`{3,3}$/ && $in_code) {
+      # exit whitespace mode, close out HTML, add blank lines
+      if ($line =~ /^`{3,3}$/ && $ws_mode) {
+        $ws_mode = 0;
         $$last_line .= "</div><br><br>";
-        $in_code = 0;
         next;
       }
-      if ($in_code) {
+
+      # handle lines differently based on if we are preserving whitespace
+      if ($ws_mode) {
         # escape characters in preserved text
         $line =~ s/(?<!\\)`/\\`/g;
         $line =~ s/(?<!\\)\*/\\*/g;
         $line =~ s/(?<!\\)%/\\%/g;
-        $$last_line .= $line . "<br>";
+        $$last_line .= "<br>";
       } else {
         push @lines, $line;
       }
     }
-    # handle formatting codes in text, preserve escaped characters
     logd($field_out, 'field_out');
+
+    # handle formatting codes in text, preserve escaped characters
     my $field = join ' ', @lines;
 
     # backticked characters
@@ -282,25 +298,28 @@ sub process_note {
 
   }
 
-  # clean up extraneous characters at the end of the line
-
-  # handle autotagging TODO: Ugly, needs cleanup
+  # generate tag field
   if (@autotags && !$new_autotags) {
-    logd($note->[-1][0], 'lnote_elem');
-    my @note_tags = split (/\s+/, $fields[-1]);
-    logd(\@note_tags, 'raw_note_tags');
+
+    # get tags from tag field
+    my @note_tags = split (/\s+/, $fields[-1]); logd(\@note_tags, 'raw_note_tags');
     my @new_tags = ();
+
+    # add tags from tag field
     foreach my $note_tag (@note_tags) {
       my $in_autotags = grep { $_ eq $note_tag } @autotags;
       push @new_tags, $note_tag unless $in_autotags;
     }
+
+    # add autotags
     foreach my $autotag (@autotags) {
       my $discard_autotag = grep { $_ eq $autotag } @note_tags;
       push @new_tags, $autotag if !$discard_autotag;
     }
+
+    # add combined tags as a field
     logd(\@new_tags, 'new_tags');
     my $new_tags = join (' ', @new_tags);
-    #$new_tags =~ s/^\s+//;
     $fields[-1] = $new_tags;
   }
   $new_autotags = 0;
@@ -318,7 +337,6 @@ sub process_note {
 
   $out .= "\n";
 }
-
 
 1; # Magic true value
 # ABSTRACT: Anki note generation made easy.
@@ -403,10 +421,10 @@ deck.
 
 Each note in the source file contains fields which should correspond to your
 existing note types in Anki. Individual notes in the source file are delineated
-by two or more blank lines. Fields are separated by a
-single blank line. Fields for each note should be in the same order as your
-Anki note types to make importing more automatic. All fields must have content
-or left intentionally blank.
+by two or more blank lines. Fields are separated by a single blank line. Fields
+for each note should be in the same order as your Anki note types to make
+importing more automatic. All fields must have content or left intentionally
+blank.
 
 To create an intionally blank field, add a single '`' (backtick) character on a
 line by itself with blank lines before and after the line with the single
@@ -414,9 +432,19 @@ backtick.
 
 See the L</Source file example> for more help.
 
-IMPORTANT: Save the source file as a plain text file with UTF-8 encoding. UTF-8
+=head2 Source file requirements and limitations
+
+=head3 Use UTF-8 encoding
+
+The source file should be a plain text file with UTF-8 encoding. UTF-8
 is likely the default encoding method for your editor but check your editor's
 settings and documentation for further details.
+
+=head3 Avoid tabs
+
+Since tab characters are used by Anki to split your fields, you should
+avoid relying on tab characters in your source file. Any tabs found in your
+source file will get converted to four spaces.
 
 =head3 Assigning notes to note types
 
@@ -676,11 +704,7 @@ manual installation. Refer to the
 C<Anki::Import> L<INSTALL file|https://metacpan.org/source/STEVIED/Anki-Import-0.012/INSTALL>
 for further details on these installation methods.
 
-=head1 SEE ALSO
-
-=cut
-
-=head2 Development status
+=head1 DEVELOPMENT STATUS
 
 This module is currently in the beta stages and is actively supported and
 maintained. Suggestions for improvement are welcome. There are likely bugs
