@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.021
+version 0.022
 
 # OVERVIEW
 
@@ -84,10 +84,10 @@ deck.
 
 Each note in the source file contains fields which should correspond to your
 existing note types in Anki. Individual notes in the source file are delineated
-by two or more blank lines. Fields are separated by a
-single blank line. Fields for each note should be in the same order as your
-Anki note types to make importing more automatic. All fields must have content
-or left intentionally blank.
+by two or more blank lines. Fields are separated by a single blank line. Fields
+for each note should be in the same order as your Anki note types to make
+importing more automatic. All fields must have content or left intentionally
+blank.
 
 To create an intionally blank field, add a single '\`' (backtick) character on a
 line by itself with blank lines before and after the line with the single
@@ -95,9 +95,19 @@ backtick.
 
 See the ["Source file example"](#source-file-example) for more help.
 
-IMPORTANT: Save the source file as a plain text file with UTF-8 encoding. UTF-8
+## Source file requirements and limitations
+
+### Use UTF-8 encoding
+
+The source file should be a plain text file with UTF-8 encoding. UTF-8
 is likely the default encoding method for your editor but check your editor's
 settings and documentation for further details.
+
+### Avoid tabs
+
+Since tab characters are used by Anki to split your fields, you should
+avoid relying on tab characters in your source file. Any tabs found in your
+source file will get converted to four spaces.
 
 ### Assigning notes to note types
 
@@ -158,7 +168,7 @@ generate simple lists. Study the example below for details.
 
 Note: Lines containing only whitespace characters are treated as blank lines.
 
-#### Source file example
+#### Example source file
 
 Below is an example of how to format a source data file. Note that the column on
 the right containing comments for this example are not permitted in an actual
@@ -225,12 +235,13 @@ source data file.
     What does this code do?              # Another less_basic question
 
     ```                                  # Preserve whitespace in a field with 3
-                                         # backticks on a single line
-    This_is_some_code {
-        print 'Whitespace will be        # Whitespace is preserved between the
-               preserved';               # sets of triple backticks
+    This_is_some_code {                  # backticks on a single line.
+    `                                    # You must still backtick blank lines
+        print 'Whitespace will be        # when preserving whitespace, however.
+               preserved';
+    `                                    # Another blank line.
     }
-    ```                                  # end whitespace preservation
+    ```                                  # End whitespace preservation
 
     This is %comma,delimted,text%        # Bullet lists with %item1,item2,item3%
 
@@ -255,8 +266,31 @@ source data file.
 
     Last anser
 
-    new_tag                              # We add a new_tag to our autotag list
-    +                                    # with the '+' sign.
+    add_this_tag_to_autotags             # We add a new_tag to our autotag list
+    +                                    # with the '+' sign by itself on a new
+                                         # line.
+
+### Getting the most from `Anki::Import`
+
+By itself, `Anki::Import` will make it easier for you to format and
+input your notes especially if you do a lot of basic HTML formatting. However,
+the huge productivity gains of `Anki::Import` can only be unlocked by getting
+proficient wih your text editor of choice.
+
+For example, you can generate templates for each of the note types you use to
+make data entry exceptionally painless. And with a text editor like vim, you
+can automate the generation of the formatting codes used by `Anki::Import`
+and make Anki note creation joyful, or at least much less tedious.
+
+Teaching you how to use and optimize your text editor for `Anki::Import` is
+well beyond the scope of this document. But if you take the time now and do the
+up front work of learning your text editor and tweaking it for use with
+`Anki::Import`, you will save a lot of time in the long run.
+
+In the future, vim configurations and plugins for use with `Anki::Import`
+may be released as they are developed to help you get going faster with vim.
+Unfortunately, other text editors cannot be supported as there are far too many
+and far too little time to get familiar with all their features.
 
 # USAGE
 
@@ -314,7 +348,7 @@ want the function call to output a success message, use (`--no-quiet`);
 # INSTALLATION
 
 `Anki::Import` is written in the Perl programming langauge. Therefore, you must
-have the Perl installed on your system. MacOS and \*nix machines will have
+have Perl installed on your system. MacOS and \*nix machines will have
 Perl already installed but the Windows operating system does not
 come pre-installed with Perl and so you may have to install it first before you
 can use `Anki::Import`.
@@ -400,17 +434,6 @@ from your repository :)
 
 You can make new bug reports, and view existing ones, through the
 web interface at [https://github.com/sdondley/Anki-Import/issues](https://github.com/sdondley/Anki-Import/issues).
-
-# SEE ALSO
-
-## Development status
-
-This module is currently in the beta stages and is actively supported and
-maintained. Suggestions for improvement are welcome. There are likely bugs
-with the text formatting in certain edge cases but it should work well for
-normal, intended use.
-
-[Anki documentation](https://apps.ankiweb.net/docs/manual.html)
 
 # AUTHOR
 
