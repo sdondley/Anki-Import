@@ -1,4 +1,4 @@
-#/usr/bin/env perl
+#!/usr/bin/env perl
 use Test::More;
 use Anki::Import;
 use Test::Exception;

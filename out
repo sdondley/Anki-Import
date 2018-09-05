@@ -1,0 +1,34 @@
+[DZ] beginning to build Anki-Import
+[Git::NextVersion] Bumping version from 0.021 to 0.022
+[PodVersion] couldn't find '=head1 NAME' in bin/anki_import, not adding '=head1 VERSION'
+[PodVersion] couldn't find '=head1 NAME' in lib/Anki/Import.pm, not adding '=head1 VERSION'
+[GitHub::Meta] Getting GitHub repository info
+[DZ] guessing dist's main_module is lib/Anki/Import.pm
+[DZ] writing Anki-Import in Anki-Import-0.022
+[DZ] building archive with Archive::Tar::Wrapper
+[DZ] writing archive to Anki-Import-0.022.tar.gz
+[Git::Check] branch master has some untracked files:
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/Changes
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/INSTALL
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/LICENSE
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/MANIFEST
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/META.json
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/META.yml
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/Makefile.PL
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/README
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/bin/anki_import
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/lib/Anki/Import.pm
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/share/log_config/anki-import.cfg
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/share/log_config/test.cfg
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/00-use_ok.t
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/01-class.t
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/02-cli.t
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/03-format_tests.t
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/code_with_blank_lines.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/cs61.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/distzilla.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/perl_modules.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/source.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/source2.anki
+[Git::Check] 	.build/WHdD5VWtGU/Anki-Import-0.022/t/data/tag_test.anki
+[Git::Check] 	out
