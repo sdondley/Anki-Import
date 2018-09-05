@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 #PODNAME: anki_import
 use strict;
 use warnings;
