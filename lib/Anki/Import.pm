@@ -9,7 +9,7 @@ use Log::Log4perl::Shortcuts 0.011 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
-# change log config to test for development for fine-tuned control over messaes
+# change log config to test for development for fine-tuned control over log output
 set_log_config('anki-import.cfg', __PACKAGE__);
 #set_log_config('test.cfg', __PACKAGE__);
 
@@ -155,6 +155,7 @@ sub slurp_note {
 
   # loop over lines in the note
   while (next_line()) {
+    logd($cline, 'cline');
     if ($cline =~ /^$|^\s+$/) {
       my @all_fields = @current_field;
       push (@note, \@all_fields) if @current_field;
@@ -170,7 +171,7 @@ sub slurp_note {
 }
 
 sub next_line {
-  return 0 if !@lines; # last line in file is always blank
+  return 0 if !@lines; # last line in file was made blank
   $lline = $cline;
   $cline = (shift @lines || '');
 
@@ -268,18 +269,31 @@ sub process_note {
       # handle lines differently based on if we are preserving whitespace
       if ($ws_mode) {
         # escape characters in preserved text
+        if ($line =~ /^`\s*$/) {
+          $$last_line .= '<br>';
+          next;
+        }
         $line =~ s/(?<!\\)`/\\`/g;
         $line =~ s/(?<!\\)\*/\\*/g;
         $line =~ s/(?<!\\)%/\\%/g;
-        $$last_line .= "<br>";
+        $$last_line .= $line . "<br>";
       } else {
         push @lines, $line;
       }
     }
+    logf('A set of backticks (```) is unmatched or you failed to backtick a'
+         . ' blank line inside of a backtick set. Please correct the source'
+         . ' file and try again. Run "perldoc Anki::Import" for more help.') if $ws_mode;
+
     logd($field_out, 'field_out');
 
-    # handle formatting codes in text, preserve escaped characters
+    shift @lines if !$lines[0];
     my $field = join ' ', @lines;
+
+    # clean up dangling breaks
+    $field =~ s/<br><\/div>/<\/div>/g;
+
+    # handle formatting codes in text, preserve escaped characters
 
     # backticked characters
     $field =~ s/(?<!\\)`(.*?)`/<span style="font-family: courier; weight: bold;">$1<\/span>/gm;
@@ -505,7 +519,7 @@ generate simple lists. Study the example below for details.
 
 Note: Lines containing only whitespace characters are treated as blank lines.
 
-=head4 Source file example
+=head4 Example source file
 
 Below is an example of how to format a source data file. Note that the column on
 the right containing comments for this example are not permitted in an actual
@@ -572,12 +586,13 @@ source data file.
     What does this code do?              # Another less_basic question
 
     ```                                  # Preserve whitespace in a field with 3
-                                         # backticks on a single line
-    This_is_some_code {
-        print 'Whitespace will be        # Whitespace is preserved between the
-               preserved';               # sets of triple backticks
+    This_is_some_code {                  # backticks on a single line.
+    `                                    # You must still backtick blank lines
+        print 'Whitespace will be        # when preserving whitespace, however.
+               preserved';
+    `                                    # Another blank line.
     }
-    ```                                  # end whitespace preservation
+    ```                                  # End whitespace preservation
 
     This is %comma,delimted,text%        # Bullet lists with %item1,item2,item3%
 
@@ -602,8 +617,31 @@ source data file.
 
     Last anser
 
-    new_tag                              # We add a new_tag to our autotag list
-    +                                    # with the '+' sign.
+    add_this_tag_to_autotags             # We add a new_tag to our autotag list
+    +                                    # with the '+' sign by itself on a new
+                                         # line.
+
+=head3 Getting the most from C<Anki::Import>
+
+By itself, C<Anki::Import> will make it easier for you to format and
+input your notes especially if you do a lot of basic HTML formatting. However,
+the huge productivity gains of C<Anki::Import> can only be unlocked by getting
+proficient wih your text editor of choice.
+
+For example, you can generate templates for each of the note types you use to
+make data entry exceptionally painless. And with a text editor like vim, you
+can automate the generation of the formatting codes used by C<Anki::Import>
+and make Anki note creation joyful, or at least much less tedious.
+
+Teaching you how to use and optimize your text editor for C<Anki::Import> is
+well beyond the scope of this document. But if you take the time now and do the
+up front work of learning your text editor and tweaking it for use with
+C<Anki::Import>, you will save a lot of time in the long run.
+
+In the future, vim configurations and plugins for use with C<Anki::Import>
+may be released as they are developed to help you get going faster with vim.
+Unfortunately, other text editors cannot be supported as there are far too many
+and far too little time to get familiar with all their features.
 
 =head1 USAGE
 
@@ -661,7 +699,7 @@ want the function call to output a success message, use (C<--no-quiet>);
 =head1 INSTALLATION
 
 C<Anki::Import> is written in the Perl programming langauge. Therefore, you must
-have the Perl installed on your system. MacOS and *nix machines will have
+have Perl installed on your system. MacOS and *nix machines will have
 Perl already installed but the Windows operating system does not
 come pre-installed with Perl and so you may have to install it first before you
 can use C<Anki::Import>.
