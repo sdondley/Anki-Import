@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+#PODNAME: anki_import
+use strict;
+use warnings;
+use Cwd;
+use Anki::Import;
+
+eval { anki_import(@ARGV) };
+
+# allow command output
+if ($@ =~ /^usage: anki_import/) {
+  print STDERR $@;
+}
+
+#ABSTRACT: command line command for the Anki::Import module
+
+__END__
+
+=pod
+
+=head1 NAME
+
+anki_import - command line command for the Anki::Import module
+
+=head1 VERSION
+
+version 0.022
+
+=head1 SYNOPSIS
+
+    anki_import path/to/source_file.txt
+
+=head1 BUGS AND LIMITATIONS
+
+You can make new bug reports, and view existing ones, through the
+web interface at L<https://github.com/sdondley/Anki-Import/issues>.
+
+=head1 SEE ALSO
+
+L<Anki::Import>
+
+=head1 AUTHOR
+
+Steve Dondley <s@dondley.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2018 by Steve Dondley.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

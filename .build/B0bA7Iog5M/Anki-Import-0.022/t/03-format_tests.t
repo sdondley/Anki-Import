@@ -14,7 +14,7 @@ use File::Path;
 
 
 
-my $tests = 9; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 8; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
 
 plan tests => $tests;
