@@ -37,7 +37,8 @@ opt quiet  => (
   isa => 'Bool',
   alias => 'q',
   default => 1,
-  comment => 'suppress success msg'
+  comment => 'On by default. Use --quiet to override this setting to suppress'
+             . ' the success message after a successful execution of the command.'
 );
 opt verbose => (
   isa => 'Bool',
@@ -91,7 +92,7 @@ sub anki_import {
   unless ($args->{'quiet'}) {
     set_log_level('info');
     logi("Success! Your import files are in the $pd"
-      . '/anki_import_files directory') unless $args->{quiet};
+      . '/anki_import_files directory');
   }
 
   # fin
@@ -241,7 +242,7 @@ sub process_note {
       # blanks lines not in non-whitespace mode
       if ($line =~ /^`\s*$/ && !$ws_mode) {
         if ($$last_line && $$last_line !~ /^<br>+$/) {
-          $$last_line .= '<br>';
+          $$last_line .= '<br><br>';
         }
         next;
       }
@@ -446,15 +447,15 @@ backtick.
 
 See the L</Source file example> for more help.
 
-=head2 Source file requirements and limitations
+=head3 Source file requirements and limitations
 
-=head3 Use UTF-8 encoding
+=head4 Use UTF-8 encoding
 
 The source file should be a plain text file with UTF-8 encoding. UTF-8
 is likely the default encoding method for your editor but check your editor's
 settings and documentation for further details.
 
-=head3 Avoid tabs
+=head4 Avoid tabs
 
 Since tab characters are used by Anki to split your fields, you should
 avoid relying on tab characters in your source file. Any tabs found in your
