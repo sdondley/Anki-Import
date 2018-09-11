@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.022
+version 0.023
 
 # OVERVIEW
 
@@ -95,15 +95,15 @@ backtick.
 
 See the ["Source file example"](#source-file-example) for more help.
 
-## Source file requirements and limitations
+### Source file requirements and limitations
 
-### Use UTF-8 encoding
+#### Use UTF-8 encoding
 
 The source file should be a plain text file with UTF-8 encoding. UTF-8
 is likely the default encoding method for your editor but check your editor's
 settings and documentation for further details.
 
-### Avoid tabs
+#### Avoid tabs
 
 Since tab characters are used by Anki to split your fields, you should
 avoid relying on tab characters in your source file. Any tabs found in your
