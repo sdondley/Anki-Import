@@ -5,12 +5,12 @@ use warnings;
 use Cwd;
 use Path::Tiny;
 use Getopt::Args;
-use Log::Log4perl::Shortcuts 0.011 qw(:all);
+use Log::Log4perl::Shortcuts 0.015 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
 # change log config to test for development for fine-tuned control over log output
-set_log_config('anki-import.cfg', __PACKAGE__);
+set_log_config('anki-import.cfg');
 #set_log_config('test.cfg', __PACKAGE__);
 
 # set up variables
