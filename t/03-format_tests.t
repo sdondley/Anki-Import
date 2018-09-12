@@ -36,7 +36,7 @@ rmtree 't/data/anki_import_files';
 sub get_data {
   my $file = shift;
   my $type = shift;
-  my $path1 = File::Spec->catfile('t', 'data', '$file.anki');
+  my $path1 = File::Spec->catfile('t', 'data', "$file.anki");
   my $path2 = File::Spec->catfile('t', 'data');
   anki_import($path1, $path2, '-V');
   $data = path("t/data/anki_import_files/${type}_notes_import.txt")->slurp_utf8;
