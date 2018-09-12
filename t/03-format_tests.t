@@ -8,9 +8,10 @@ use Anki::Import;
 use Log::Log4perl::Shortcuts qw(:all);
 use Data::Dumper qw(Dumper);
 use Path::Tiny;
+use File::Spec;
 use File::Path;
 
-
+$ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
 
 
 
@@ -20,7 +21,6 @@ diag( "Running my tests" );
 plan tests => $tests;
 
 my $data = get_data('code_with_blank_lines', 'basic');
-print Dumper $data;
 
 is (mcount("\t"), 1, 'got expected number of tabs');
 is (mcount("\n"), 0, 'got expected number of newlines');
@@ -36,7 +36,9 @@ rmtree 't/data/anki_import_files';
 sub get_data {
   my $file = shift;
   my $type = shift;
-  anki_import("t/data/$file.anki", 't/data', '-V');
+  my $path1 = File::Spec->catfile('t', 'data', '$file.anki');
+  my $path2 = File::Spec->catfile('t', 'data');
+  anki_import($path1, $path2, '-V');
   $data = path("t/data/anki_import_files/${type}_notes_import.txt")->slurp_utf8;
 }
 
