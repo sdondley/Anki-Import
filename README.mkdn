@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.025
+version 0.026
 
 # OVERVIEW
 
@@ -397,7 +397,6 @@ for further details on these installation methods.
 - [Exporter](https://metacpan.org/pod/Exporter)
 - [Getopt::Args](https://metacpan.org/pod/Getopt::Args)
 - [Log::Log4perl::Shortcuts](https://metacpan.org/pod/Log::Log4perl::Shortcuts)
-- [Path::Tiny](https://metacpan.org/pod/Path::Tiny)
 - [strict](https://metacpan.org/pod/strict)
 - [warnings](https://metacpan.org/pod/warnings)
 
