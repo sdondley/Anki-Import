@@ -1,19 +1,9 @@
 #!/usr/bin/env perl
 use Test::More;
 use Anki::Import;
-use Test::Exception;
 use Test::Warnings;
-use Test::Output;
-use Anki::Import;
-use Log::Log4perl::Shortcuts qw(:all);
-use Data::Dumper qw(Dumper);
-use Path::Tiny;
 use File::Spec;
 use File::Path;
-
-$ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
-
-
 
 my $tests = 9; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
@@ -31,7 +21,8 @@ is (mcount(">Line 1<br><br>"), 1, 'line 1 properly formatted');
 is (mcount("><br>Line 2<br><br>"), 1, 'line 2 properly formatted');
 is (mcount(">Line 3</div>"), 1, 'line 3 does not end in <br>');
 
-rmtree 't/data/anki_import_files';
+my $path = File::Spec->catfile('t', 'data', 'anki_import_files');
+rmtree $path;
 
 sub get_data {
   my $file = shift;
@@ -39,7 +30,12 @@ sub get_data {
   my $path1 = File::Spec->catfile('t', 'data', "$file.anki");
   my $path2 = File::Spec->catfile('t', 'data');
   anki_import($path1, $path2, '-V');
-  $data = path("t/data/anki_import_files/${type}_notes_import.txt")->slurp_utf8;
+  my $path3 = File::Spec->catfile('t', 'data', 'anki_import_files', "${type}_notes_import.txt");
+  open (my $data_file, "<:encoding(UTF-8)", $path3) or die "Can't open '$path3' for reading: $!";
+  my $content;
+  { local $/; $content = <$data_file>; }
+  close $file;
+  return $content;
 }
 
 sub mcount {

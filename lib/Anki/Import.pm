@@ -3,14 +3,14 @@ package Anki::Import ;
 use strict;
 use warnings;
 use Cwd;
-use Path::Tiny;
-use Getopt::Args;
+use Getopt::Args 0.1.20;
 use Log::Log4perl::Shortcuts 0.015 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
 # change log config to test for development for fine-tuned control over log output
 set_log_config('anki-import.cfg');
+logd(get_log_config());
 #set_log_config('test.cfg', __PACKAGE__);
 
 # set up variables
@@ -75,11 +75,14 @@ sub anki_import {
 
   # get and load the source file
   logi('Loading file');
-  my $path  = path($file); logd($path);
-  if (!path($file)->exists) {
-    logf("Aborting: Source file named '$file' does not exist.");
+  my $path  = File::Spec->catfile($file); logd($path);
+  if (! -e $path) {
+    logf("Aborting: Source file named '$path' does not exist.");
   };
-  @lines = $path->lines_utf8; logi('Source file loaded.');
+  open (my $handle, "<:encoding(UTF-8)", $path) or logf("Could not open $path");;
+  chomp(@lines = <$handle>);
+  close $handle;
+  logi('Source file loaded.');
 
   # pad data with a blank line to make it easier to process
   push @lines, '';
@@ -203,9 +206,14 @@ sub generate_importable_files {
 
   logi('Writing notes out to file');
   foreach my $file ( keys %filenames ) {
-    my $out_path = path($pd, "anki_import_files/$file")->touchpath;
+    my $dir = File::Spec->catfile($pd, 'anki_import_files');
+    mkdir $dir || logf("Could not make directory: $dir, $!");
+    logd($dir);
+    my $out_path = File::Spec->catfile($dir, $file);
+    open (my $handle, ">>:encoding(UTF-8)", $out_path) or logf("Could not create file: $out_path");
     chomp $filenames{$file}{content};
-    $out_path->spew($filenames{$file}{content});
+    print $handle $filenames{$file}{content};
+    close $handle;
   }
 }
 
