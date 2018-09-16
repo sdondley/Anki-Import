@@ -4,7 +4,7 @@ Anki::Import - Anki note generation made easy.
 
 # VERSION
 
-version 0.026
+version 0.027
 
 # OVERVIEW
 
