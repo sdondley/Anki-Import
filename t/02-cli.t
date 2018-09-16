@@ -21,16 +21,16 @@ plan tests => $tests;
 
 my $cmd = File::Spec->catfile('bin', 'anki_import');
 $cmd =~ s/\\/\\\\/;
-stderr_like { `$cmd` } qr/usage: anki_import FILE/, 'dies without file';
+stderr_like { `perl $cmd` } qr/usage: anki_import FILE/, 'dies without file';
 
 $cmd = File::Spec->catfile('bin', 'anki_import');
 $cmd =~ s/\\/\\\\/;
-stderr_like { `$cmd blasdfah` } qr/[FATAL].*does not exist/, 'dies with bad file';
+stderr_like { `perl $cmd blasdfah` } qr/[FATAL].*does not exist/, 'dies with bad file';
 
 $cmd = File::Spec->catfile('bin', 'anki_import');
 $cmd =~ s/\\/\\\\/;
 my $path = File::Spec->catfile('t', 'data' , 'source.anki');
-lives_ok { `$cmd $path` } 'can process good file';
+lives_ok { `perl $cmd $path` } 'can process good file';
 
 #lives_ok { `bin/anki_import t/data/distzilla.anki -V` } 'can process good file';
 

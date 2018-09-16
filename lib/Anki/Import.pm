@@ -4,13 +4,12 @@ use strict;
 use warnings;
 use Cwd;
 use Getopt::Args 0.1.20;
-use Log::Log4perl::Shortcuts 0.015 qw(:all);
+use Log::Log4perl::Shortcuts 0.021 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
 
 # change log config to test for development for fine-tuned control over log output
 set_log_config('anki-import.cfg');
-logd(get_log_config());
 #set_log_config('test.cfg', __PACKAGE__);
 
 # set up variables
