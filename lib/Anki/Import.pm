@@ -3,7 +3,7 @@ package Anki::Import ;
 use strict;
 use warnings;
 use Cwd;
-use Getopt::Args 0.1.20;
+use Getopt::Args;
 use Log::Log4perl::Shortcuts 0.021 qw(:all);
 use Exporter qw(import);
 our @EXPORT = qw(anki_import);
