@@ -5,7 +5,7 @@ use Test::Warnings;
 use File::Spec;
 use File::Path;
 
-my $tests = 9; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 14; # keep on line 17 for ,i (increment and ,d (decrement)
 diag( "Running my tests" );
 
 plan tests => $tests;
@@ -20,6 +20,20 @@ is (mcount("\tAnswer\$"), 1, 'answer properly formatted');
 is (mcount(">Line 1<br><br>"), 1, 'line 1 properly formatted');
 is (mcount("><br>Line 2<br><br>"), 1, 'line 2 properly formatted');
 is (mcount(">Line 3</div>"), 1, 'line 3 does not end in <br>');
+
+$data = get_data('escape_angle_brackets', 'basic');
+
+is (mcount("&lt;"), 4, 'got expected number of html entities');
+is ($data =~ /with &lt;angle/, 1, 'first angle bracket replaced');
+is ($data =~ /one &lt;angle/, 1, 'second angle bracket replaced');
+is ($data =~ /more &lt;of/, 1, 'third angle bracket replaced');
+is ($data =~ /of &lt;them/, 1, 'last angle bracket replaced');
+
+use Data::Dumper qw(Dumper);
+
+print Dumper $data;
+
+
 
 my $path = File::Spec->catfile('t', 'data', 'anki_import_files');
 rmtree $path;
